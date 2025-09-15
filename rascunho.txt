@@ -1,0 +1,87 @@
+/* === MINI VIEW === */
+
+
+
+
+
+
+.progress-ring-background {
+    stroke: var(--color-progress-bg);
+}
+
+.progress-ring-progress {
+    stroke: var(--color-progress-fill);
+    stroke-linecap: round;
+    stroke-dasharray: var(--progress-circumference);
+    stroke-dashoffset: var(--progress-circumference);
+    transition: stroke-dashoffset var(--transition-normal);
+}
+
+.mini-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.mini-mode {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-accent);
+    margin-bottom: var(--spacing-xs);
+}
+
+.mini-timer {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: var(--line-height-tight);
+}
+
+.mini-round {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+    margin-top: var(--spacing-xs);
+}
+
+.mini-controls {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+ <!-- Container da Janela Pequena (Mini View) -->
+    <div class="timer-window">
+          <div class="timer-display-section">
+      <div id="mode-display" class="mode-display" aria-live="polite">Focus</div>
+
+      <div class="progress-ring-container" aria-label="Progresso do timer">
+        <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="progress-ring-background" stroke-width="8" fill="transparent" r="52" cx="60" cy="60" />
+          <circle id="mini-progress-ring" class="progress-ring-progress" stroke-width="8" fill="transparent" r="52"
+            cx="60" cy="60" stroke-linecap="round" />
+        </svg>
+
+
+        <div class="mini-display">
+          <div id="mini-mode-display" class="mini-mode" aria-live="polite">Focus</div>
+
+          <div id="mini-timer-display" class="mini-timer" aria-live="polite" aria-label="Tempo restante">25:00</div>
+          <div id="mini-round-display" class="mini-round" aria-live="polite">Round: 1 / 4</div>
+        </div>
+      </div>
+
+      <div class="mini-controls" role="group" aria-label="Controles do timer compacto">
+        <button id="mini-start-btn" class="btn btn-mini btn-primary" aria-label="Iniciar timer">
+          INICIAR
+        </button>
+        <button id="mini-pause-btn" class="btn btn-mini btn-secondary" aria-label="Pausar timer">
+          PAUSAR
+        </button>
+        <button id="mini-reset-btn" class="btn btn-mini btn-danger" aria-label="Resetar timer">
+          RESETAR
+        </button>
+      </div>
+    </div>

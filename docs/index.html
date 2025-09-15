@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PomoTask — Extensão Chrome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        h1,
+        h2 {
+            color: #2c3e50;
+        }
+
+        code {
+            background-color: #eee;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .screenshot {
+            margin-top: 1rem;
+            border: 1px solid #ccc;
+            max-width: 100%;
+        }
+
+        .download {
+            margin-top: 1rem;
+            display: inline-block;
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>PomoTask ⏱️</h1>
+    <p>Extensão para Chrome que ajuda você a gerenciar suas tarefas usando a Técnica Pomodoro! Foco, tempo e
+        produtividade, tudo num clique.</p>
+
+    <h2>🧪 Como instalar (modo desenvolvedor)</h2>
+    <ol>
+        <li>Acesse <code>chrome://extensions</code></li>
+        <li>Ative o <strong>Modo do desenvolvedor</strong> (canto superior direito)</li>
+        <li>Clique em <strong>Carregar sem compactação</strong></li>
+        <li>Escolha a pasta do projeto com o <code>manifest.json</code></li>
+        <li>Use o ícone da extensão para abrir o popup</li>
+    </ol>
+
+    <h2>🔐 Permissões usadas</h2>
+    <ul>
+        <li><code>storage</code>: para salvar seus ciclos</li>
+        <li><code>tabs</code>: (se aplicável, remover se não usar)</li>
+    </ul>
+
+    <h2>🖼️ Visual da Extensão</h2>
+    <img src="../src/assets/logo.svg" alt="Screenshot do popup" class="screenshot" />
+
+    <h2>⬇️ Download</h2>
+    <p>Você pode baixar a versão empacotada clicando abaixo:</p>
+    <a href="https://github.com/mariisena/pomo-task/releases" class="download">🔗 Baixar Release (.zip)</a>
+</body>
+
+</html>

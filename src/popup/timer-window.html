@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <!-- codificação de caracteres -->
+  <meta charset="UTF-8">
+  <!-- funcionar em telas pequenas -->
+  <meta name="viewport" content="width=device-width" , initial-scale="1.0">
+  <!-- título da aba do navegador -->
+  <title>Pomo Task</title>
+
+  <link rel="stylesheet" href="/src/popup/popup.css">
+  <link rel="stylesheet" href="/src/popup/styles/time-windows.css">
+</head>
+
+<body>
+  <section class="main-container">
+    <!-- Tela Principal -->
+    <div id="main-view" class="view">
+      <!-- Cabeçalho -->
+      <header class="header">
+        <h1 id="title-site" class="main-title">POMO TASKS</h1>
+      </header>
+    </div>
+
+    <hr class="divider" role="separator">
+
+    <section class="timer-window">
+      <!-- Timer Display -->
+      <div class="timer-display-section">
+        <div id="mode-display" class="mini-mode-display" aria-live="polite">Focus</div>
+        <div id="timer-display" class="mini-timer-display" aria-live="polite" aria-label="Tempo restante">25:00</div>
+        <div id="round-display" class="mini-round-display" aria-live="polite">Round: 1 / 4</div>
+      </div>
+
+      <!-- Progress Ring -->
+      <div class="progress-ring-container" aria-label="Progresso do timer">
+        <svg class="progress-ring" viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="progress-ring-background" stroke-width="8" fill="transparent" r="52" cx="60" cy="60" />
+          <circle id="progress-ring" class="progress-ring-progress" stroke-width="8" fill="transparent" r="52" cx="60"
+            cy="60" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <section class="buttons-container">
+        <!-- Timer Controls -->
+        <div id="timer-controls" role="group" aria-label="Controles do timer">
+          <button id="start-btn" class="btn btn-primary btn-mini" aria-label="Iniciar timer">
+            INICIAR
+          </button>
+          <button id="pause-btn" class="btn btn-secondary btn-mini" aria-label="Pausar timer">
+            PAUSAR
+          </button>
+          <button id="reset-btn" class="btn btn-danger btn-mini" aria-label="Resetar timer">
+            RESETAR
+          </button>
+        </div>
+      </section>
+
+      <section>
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button id="settings-btn" class="btn btn-ghost btn-mini" aria-label="Abrir configurações">
+            ⚙️ Config
+          </button>
+          <button id="tasks-btn" class="btn btn-ghost btn-mini" aria-label="Ver tarefas">
+            📝 Tarefas
+          </button>
+        </div>
+      </section>
+    </section>
+
+    <!-- Scripts -->
+    <script src="/src/js/navigation.js"></script>
+    <script src="/src/js/timer-window.js"></script>
+    <script src="/src/js/settings.js"></script>
+</body>
+
+</html>

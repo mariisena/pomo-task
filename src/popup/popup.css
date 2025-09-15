@@ -1,0 +1,447 @@
+/**
+ * Popup.css - Estilos principais da extensão Pomo Tasks
+ */
+
+/* Importação das fontes */
+@import url('https://fonts.googleapis.com/css2?family=Koulen&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.koulen-regular {
+    font-family: "Koulen", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+}
+
+.inconsolata {
+    font-family: "Inconsolata", monospace;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: ormal;
+    font-variation-settings:
+        "width" 100;
+}
+
+.inter {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.anton-regular {
+    font-family: "Anton", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Estilização Geral */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #1E1E2F;
+    font-family: "Inter", sans-serif;
+    color: #FFFFFF;
+    line-height: 1.5;
+    padding: 16px;
+    font-size: 16px;
+}
+
+.header-frame {
+    border: none;
+    width: 100%;
+    height: 448px;
+    margin: 0 auto;
+    align-items: center;
+    position: relative;
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #475569;
+    margin: 16px 0;
+}
+
+.main-container {
+    width: 100%;
+    max-width: 448px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#main-view {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#main-view:not(.hidden) {
+    display: block;
+}
+
+.timer-card {
+    background: rgba(31, 5, 40, 0.50);
+    padding: 14px;
+    border-radius: 5px;
+    border: 1px solid #475569;
+    text-align: center;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Display do Timer */
+.mode-display {
+    font-family: "Anton", sans-serif;
+    font-size: 48px;
+    font-weight: 400;
+    color: #FFF;
+}
+
+.timer-display {
+    font-family: "Inter", sans-serif;
+    color: #FFFFFF;
+    font-size: 96px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+.round-display {
+    font-family: "Inter", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+/* Estilização dos botões */
+.buttons-display {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Botões Base */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 15px;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    transition: 150ms ease-in-out;
+    text-decoration: none;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:focus-visible {
+    outline: 2px solid #8b5cf6;
+    outline-offset: 2px;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Variações de Botões */
+.btn-primary {
+    background-color: #04D797;
+    color: #000000;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: #03B885;
+}
+
+.btn-secondary {
+    background-color: #ca8a04;
+    color: #FFFFFF;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: #a16207;
+}
+
+.btn-danger {
+    background-color: #dc2626;
+    color: #FFFFFF;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #b91c1c;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-mini {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+/* Seção de Tarefas */
+.task-menu-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tasks-header h2 {
+    color: #FFF;
+    font-family: "Inconsolata", monospace;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 28px;
+    margin-bottom: 10px;
+}
+
+/* O botão de três pontinhos */
+.menu-btn {
+    /* Efeito "full" */
+    background-color: transparent;
+    transition: background-color 150ms ease-in-out;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.menu-btn:hover {
+    background-color: #2a2c41;
+}
+
+/* O menu dropdown que aparece */
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: 200px;
+    background-color: #2a2c41;
+    border-radius: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    /* Garante que fique na frente */
+    display: none;
+    /* Começa escondido */
+}
+
+
+
+/* Estilo base para os links dentro do menu */
+.menu-item {
+    font-size: 20px;
+    color: #cbd5e1;
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    background: none;
+    border: none;
+    font-size: 400;
+    cursor: pointer;
+}
+
+.menu-item:hover,
+.menu-item:focus {
+    background-color: rgba(31, 5, 40, 0.50);
+    color: #FFFFFF;
+}
+
+.menu-divider {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border-top: 1px solid #3c3e5e;
+}
+
+/* Formulário de Adição de Tarefas */
+
+/* Espaçamento entre as tarefas na lista */
+.add-task-form>*+* {
+    margin-top: 12px;
+}
+
+/* O contêiner do formulário */
+.add-task-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 2px dashed #909090;
+    background: rgba(31, 5, 40, 0.50);
+    transition: all 150ms ease-in-out;
+    margin-bottom: 16px;
+}
+
+/* Efeito de hover no contêiner */
+.add-task-form:hover,
+.add-task-form:focus-within {
+    border-color: #8b5cf6;
+}
+
+/* Estilo do campo de input */
+.task-input {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    padding: 16px;
+    font-family: "Inconsolate", monospace;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Remove a borda de foco padrão do navegador e adiciona custom */
+.task-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #8b5cf6;
+    /* Foco customizado para acessibilidade */
+}
+
+/* Estiliza o texto do placeholder */
+.task-input::placeholder {
+    color: #6b7280;
+    opacity: 1;
+}
+
+/* Estilização do botão */
+.add-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 150ms ease-in-out;
+}
+
+.add-btn:hover {
+    transform: scale(1.1);
+}
+
+.add-btn:focus-visible {
+    outline: 2px solid #8b5cf6;
+    outline-offset: 2px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Lista de Tarefas */
+.tasks-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background-color: #2D2D3F;
+    border-radius: 8px;
+    transition: 150ms ease-in-out;
+}
+
+.task-item:hover {
+    background-color: #2a2c41;
+}
+
+.task-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #334155;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.task-text {
+    flex: 1;
+    color: #FFFFFF;
+    font-size: 16px;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    color: #94a3b8;
+}
+
+.footer-frame {
+    border: none;
+    width: 100%;
+    margin: 0 auto;
+    align-items: center;
+    display: flex;
+}
+
+/* === TIMER WINDOW BUTTON === */
+
+.btn-full {
+    width: 100%;
+    padding: 16px 20px;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.timer-help-text {
+    font-size: 14px;
+    color: #334155;
+    text-align: center;
+    margin: 0;
+    font-style: italic;
+}
+
+/* === SETTINGS ACTIONS === */
+
+.settings-actions {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #334155;
+}
+
+/* .visually-hidden = invisível visualmente, mas sem remover do fluxo (redundante com sr-only)*/
+.visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,115 @@
+/* === RESPONSIVIDADE === */
+
+@media (max-width: 480px) {
+    body {
+        padding: var(--spacing-md);
+    }
+
+    .main-title {
+        font-size: var(--font-size-3xl);
+    }
+
+    .timer-display {
+        font-size: var(--font-size-6xl);
+    }
+
+    .mode-display {
+        font-size: var(--font-size-4xl);
+    }
+
+    .timer-controls {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .input-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+    .input-label {
+        min-width: auto;
+    }
+
+    .toggle-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+}
+
+@media (max-height: 600px) {
+    .timer-card {
+        padding: var(--spacing-lg);
+    }
+
+    .timer-display {
+        font-size: var(--font-size-5xl);
+    }
+
+    .mode-display {
+        font-size: var(--font-size-3xl);
+    }
+}
+
+/* === ESTADOS DE FOCO PARA ACESSIBILIDADE === */
+
+*:focus-visible {
+    outline: 2px solid var(--color-border-focus);
+    outline-offset: 2px;
+}
+
+/* === ANIMAÇÕES === */
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Aplica efeito de atenção visual ao timer */
+.timer-display.pulsing {
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* === MODO DE ALTO CONTRASTE === */
+
+@media (prefers-contrast: high) {
+    :root {
+        --color-border-focus: #ffffff;
+        --color-text-muted: #cccccc;
+    }
+
+    .btn {
+        border: 2px solid currentColor;
+    }
+}
+
+/* === PREFERÊNCIAS DE MOVIMENTO === */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --transition-fast: 0ms;
+        --transition-normal: 0ms;
+        --transition-slow: 0ms;
+        --animation-duration-short: 0ms;
+        --animation-duration-medium: 0ms;
+        --animation-duration-long: 0ms;
+    }
+
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

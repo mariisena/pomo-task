@@ -1,0 +1,189 @@
+/**
+ * Variables.css - Design System da extensão Pomo Tasks
+ * Define todas as variáveis CSS para cores, tipografia, espaçamentos e outros valores
+ */
+
+:root {
+    /* === CORES === */
+
+    /* Cores Primárias */
+    --color-primary: #04D797;
+    --color-primary-dark: #03B885;
+    --color-primary-light: #26E5A8;
+
+    /* Cores de Fundo */
+    --color-bg-primary: #1E1E2F;
+    --color-bg-secondary: #2D2D3F;
+    --color-bg-tertiary: #2a2c41;
+    --color-bg-card: rgba(31, 5, 40, 0.50);
+    --color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+    /* Cores de Texto */
+    --color-text-primary: #FFFFFF;
+    --color-text-secondary: #e2e8f0;
+    --color-text-muted: #94a3b8;
+    --color-text-accent: #a78bfa;
+    --color-text-dark: #000000;
+
+    /* Cores de Estado */
+    --color-success: #16a34a;
+    --color-success-hover: #15803d;
+    --color-warning: #ca8a04;
+    --color-warning-hover: #a16207;
+    --color-danger: #dc2626;
+    --color-danger-hover: #b91c1c;
+
+    /* Cores de Borda */
+    --color-border-primary: #CDCDCD;
+    --color-border-secondary: #475569;
+    --color-border-muted: #334155;
+    --color-border-focus: #8b5cf6;
+
+    /* Cores de Progresso */
+    --color-progress-bg: #334155;
+    --color-progress-fill: #8b5cf6;
+
+    /* === TIPOGRAFIA === */
+
+    /* Famílias de Fonte */
+    --font-primary: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-display: "Koulen", "Anton", sans-serif;
+    --font-mono: "Inconsolata", "Fira Code", "Consolas", monospace;
+
+    /* Tamanhos de Fonte */
+    --font-size-xs: 0.75rem;
+    /* 12px */
+    --font-size-sm: 0.875rem;
+    /* 14px */
+    --font-size-base: 1rem;
+    /* 16px */
+    --font-size-lg: 1.125rem;
+    /* 18px */
+    --font-size-xl: 1.25rem;
+    /* 20px */
+    --font-size-2xl: 1.5rem;
+    /* 24px */
+    --font-size-3xl: 1.875rem;
+    /* 30px */
+    --font-size-4xl: 2.25rem;
+    /* 36px */
+    --font-size-5xl: 3rem;
+    /* 48px */
+    --font-size-6xl: 4rem;
+    /* 64px */
+    --font-size-7xl: 6rem;
+    /* 96px */
+
+    /* Pesos de Fonte */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Alturas de Linha */
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* === ESPAÇAMENTOS === */
+
+    --spacing-xs: 0.25rem;
+    /* 4px */
+    --spacing-sm: 0.5rem;
+    /* 8px */
+    --spacing-md: 0.75rem;
+    /* 12px */
+    --spacing-lg: 1rem;
+    /* 16px */
+    --spacing-xl: 1.25rem;
+    /* 20px */
+    --spacing-2xl: 1.5rem;
+    /* 24px */
+    --spacing-3xl: 2rem;
+    /* 32px */
+    --spacing-4xl: 2.5rem;
+    /* 40px */
+    --spacing-5xl: 3rem;
+    /* 48px */
+    --spacing-6xl: 4rem;
+    /* 64px */
+
+    /* === BORDAS === */
+
+    --border-radius-sm: 0.25rem;
+    /* 4px */
+    --border-radius-md: 0.5rem;
+    /* 8px */
+    --border-radius-lg: 0.75rem;
+    /* 12px */
+    --border-radius-xl: 1rem;
+    /* 16px */
+    --border-radius-full: 9999px;
+
+    --border-width-thin: 1px;
+    --border-width-medium: 2px;
+    --border-width-thick: 3px;
+
+    /* === SOMBRAS === */
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+    /* === TRANSIÇÕES === */
+
+    --transition-fast: 150ms ease-in-out;
+    --transition-normal: 200ms ease-in-out;
+    --transition-slow: 300ms ease-in-out;
+
+    --transition-colors: color var(--transition-fast),
+        background-color var(--transition-fast),
+        border-color var(--transition-fast);
+
+    --transition-transform: transform var(--transition-fast);
+    --transition-opacity: opacity var(--transition-fast);
+
+    /* === DIMENSÕES === */
+
+    /* Larguras */
+    --width-popup: color;
+    --width-mini: 192px;
+    --width-button: 120px;
+
+    /* Alturas */
+    --height-button: 40px;
+    --height-input: 48px;
+    --height-mini: 192px;
+
+    /* === Z-INDEX === */
+
+    --z-dropdown: 10;
+    --z-modal: 20;
+    --z-tooltip: 30;
+    --z-notification: 40;
+
+    /* === BREAKPOINTS === */
+
+    --breakpoint-sm: 480px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+
+    /* === VALORES ESPECÍFICOS === */
+
+    /* Progresso circular */
+    --progress-circumference: 327;
+    /* 2 * PI * 52 */
+    --progress-radius: 52;
+
+    /* Durações de animação */
+    --animation-duration-short: 0.2s;
+    --animation-duration-medium: 0.3s;
+    --animation-duration-long: 0.5s;
+
+    /* Opacidades */
+    --opacity-disabled: 0.5;
+    --opacity-hover: 0.8;
+    --opacity-focus: 0.9;
+}
+

@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "PomoTasks",
+  "version": "1.0.0",
+  "description": "Extensão Pomodoro com lista de tarefas. Foque e realize mais!",
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications",
+    "offscreen",
+    "windows"
+  ],
+  "host_permissions": [],
+  "background": {
+    "service_worker": "src/background/service-worker.js"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Abrir PomoTasks",
+    "default_icon": {
+      "16": "icons/tomato.png",
+      "48": "icons/tomato.png",
+      "128": "icons/tomato.png"
+    }
+  },
+  "icons": {
+    "16": "icons/tomato.png",
+    "48": "icons/tomato.png",
+    "128": "icons/tomato.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';"
+  }
+}
