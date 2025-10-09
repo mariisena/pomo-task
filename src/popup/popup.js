@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initializePopup() {
-    // Botão para abrir janela externa
+    // Botão para abrir janela externa (removido, não existe mais)
     const openTimerWindowBtn = document.getElementById("open-timer-window-btn");
     if (openTimerWindowBtn) {
         openTimerWindowBtn.addEventListener('click', openTimerWindow);
@@ -23,7 +23,15 @@ function initializePopup() {
         });
 
         // Fechar menu ao clicar fora
-        document.addEventListener('click', () => {
+        document.addEventListener('click', (e) => {
+            if (!menu.contains(e.target) && e.target !== menuBtn) {
+                menu.classList.remove('show');
+                menuBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Fechar menu ao clicar em um item
+        menu.addEventListener('click', () => {
             menu.classList.remove('show');
             menuBtn.setAttribute('aria-expanded', 'false');
         });

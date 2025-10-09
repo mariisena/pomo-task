@@ -13,23 +13,43 @@ class TaskManager {
         this.elements.tasksList = document.getElementById('tasks-list');
         this.elements.clearAll = document.getElementById('clear-all-btn');
         this.elements.clearCompleted = document.getElementById('clear-completed-btn');
+        this.elements.menuBtn = document.getElementById('task-menu-btn');
+        this.elements.menu = document.getElementById('task-menu');
 
         this.bindEvents();
-        this.loadTasks();
-        this.renderTasks();
+        this.loadTasks().then(() => this.renderTasks());
     }
 
     bindEvents() {
+        // Form de adicionar tarefa
         this.elements.form?.addEventListener('submit', e => {
             e.preventDefault();
             this.addTask();
         });
 
+        // Toggle menu dropdown
+        this.elements.menuBtn?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.elements.menu?.classList.toggle('show');
+            const isOpen = this.elements.menu?.classList.contains('show');
+            this.elements.menuBtn?.setAttribute('aria-expanded', isOpen);
+        });
+
+        // Fechar menu ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.tasks-menu-container') && !e.target.closest('#task-menu')) {
+                this.elements.menu?.classList.remove('show');
+                this.elements.menuBtn?.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        // Botões do menu
         this.elements.clearAll?.addEventListener('click', () => {
             if (confirm('Deseja realmente limpar todas as tarefas?')) {
                 this.tasks = [];
                 this.saveTasks();
                 this.renderTasks();
+                this.elements.menu?.classList.remove('show');
             }
         });
 
@@ -37,6 +57,45 @@ class TaskManager {
             this.tasks = this.tasks.filter(t => !t.completed);
             this.saveTasks();
             this.renderTasks();
+            this.elements.menu?.classList.remove('show');
+        });
+
+        // Event delegation para a lista de tarefas
+        this.elements.tasksList?.addEventListener('click', (e) => {
+            const taskItem = e.target.closest('.task-item');
+            if (!taskItem) return;
+
+            const taskId = parseInt(taskItem.dataset.taskId);
+
+            // Botão de deletar
+            if (e.target.closest('.task-delete-btn')) {
+                e.preventDefault();
+                this.deleteTask(taskId);
+            }
+
+            // Botão de editar
+            if (e.target.closest('.task-edit-btn')) {
+                e.preventDefault();
+                this.startEdit(taskId);
+            }
+        });
+
+        // Event delegation para checkbox
+        this.elements.tasksList?.addEventListener('change', (e) => {
+            if (e.target.classList.contains('task-checkbox')) {
+                const taskItem = e.target.closest('.task-item');
+                const taskId = parseInt(taskItem.dataset.taskId);
+                this.toggleTask(taskId);
+            }
+        });
+
+        // Event delegation para duplo clique no texto
+        this.elements.tasksList?.addEventListener('dblclick', (e) => {
+            if (e.target.classList.contains('task-text')) {
+                const taskItem = e.target.closest('.task-item');
+                const taskId = parseInt(taskItem.dataset.taskId);
+                this.startEdit(taskId);
+            }
         });
     }
 
@@ -105,7 +164,7 @@ class TaskManager {
             }
         };
 
-        input.addEventListener('blur', saveEdit);
+        input.addEventListener('blur', saveEdit, { once: true });
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -125,12 +184,11 @@ class TaskManager {
         }
         this.elements.tasksList.innerHTML = this.tasks.map(t => `
             <li class="task-item ${t.completed ? 'completed' : ''}" data-task-id="${t.id}">
-              <input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''}
-                     onchange="taskManager.toggleTask(${t.id})" aria-label="Marcar tarefa como concluída">
-              <span class="task-text" ondblclick="taskManager.startEdit(${t.id})">${t.text}</span>
+              <input type="checkbox" class="task-checkbox" ${t.completed ? 'checked' : ''} aria-label="Marcar tarefa como concluída">
+              <span class="task-text">${t.text}</span>
               <div class="task-actions">
-                <button class="task-edit-btn" onclick="taskManager.startEdit(${t.id})" title="Editar tarefa" aria-label="Editar tarefa">✏️</button>
-                <button class="task-delete-btn" onclick="taskManager.deleteTask(${t.id})" title="Deletar tarefa" aria-label="Deletar tarefa">🗑️</button>
+                <button class="task-edit-btn" title="Editar tarefa" aria-label="Editar tarefa">✏️</button>
+                <button class="task-delete-btn" title="Deletar tarefa" aria-label="Deletar tarefa">🗑️</button>
               </div>
             </li>
         `).join('');

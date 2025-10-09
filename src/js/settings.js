@@ -96,7 +96,23 @@ class SettingsManager {
         }
 
         if (this.elements.confirmBtn) {
-            this.elements.confirmBtn.addEventListener('click', () => this.saveAndApplySettings());
+            this.elements.confirmBtn.addEventListener('click', async () => {
+                await this.saveAndApplySettings();
+
+                // Feedback visual
+                this.elements.confirmBtn.textContent = '✓ SALVO!';
+                this.elements.confirmBtn.style.backgroundColor = '#10b981';
+
+                // Voltar para a tela principal após 500ms
+                setTimeout(() => {
+                    if (window.navigationManager) {
+                        window.navigationManager.showView('main');
+                    }
+                    // Restaurar texto do botão
+                    this.elements.confirmBtn.textContent = 'CONFIRMAR';
+                    this.elements.confirmBtn.style.backgroundColor = '';
+                }, 500);
+            });
         }
     }
 

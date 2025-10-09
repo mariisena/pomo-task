@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="/src/popup/styles/variable.css">
   <link rel="stylesheet" href="/src/popup/popup.css">
+  <link rel="stylesheet" href="/src/popup/styles/popup_settimer.css">
   <link rel="stylesheet" href="/src/popup/styles/popup_responsive.css">
 
   <style>
@@ -17,7 +18,21 @@
       height: 520px;
       margin: 0;
       padding: 0;
-      overflow: hidden;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* Views navigation */
+    .view.hidden {
+      display: none;
+    }
+
+    #main-view {
+      display: block;
+    }
+
+    #main-view.hidden {
+      display: none;
     }
   </style>
 </head>
@@ -56,10 +71,6 @@
         </div>
       </section>
 
-      <!-- Botão para abrir a janela externa -->
-      <button id="open-timer-window-btn" aria-label="Abrir Timer em nova janela">
-        Abrir Timer em Janela Separada
-      </button>
       <hr class="divider">
     </section>
 
@@ -80,12 +91,86 @@
       <button id="clear-all-btn" class="menu-item">Limpar todas as tarefas</button>
     </div>
 
+    <!-- Lista de Tarefas -->
+    <ul id="tasks-list" class="tasks-list">
+      <li class="empty-message">Nenhuma tarefa.</li>
+    </ul>
+
     <form id="add-task-form" class="add-task-form">
       <input type="text" id="task-input" class="task-input" placeholder="Adicionar tarefa" maxlength="100">
       <button type="submit" id="add-btn" class="add-btn">
         <img src="/icons/mais.svg" alt="" width="24" height="24">
       </button>
     </form>
+  </section>
+
+  <!-- Settings View -->
+  <section id="settings-view" class="view hidden">
+    <header class="header-set">
+      <h1 class="main-title-set">CONFIGURAÇÕES</h1>
+      <button type="button" id="back-to-main" class="back-btn" aria-label="Voltar para tela principal">
+        ← Voltar
+      </button>
+    </header>
+
+    <hr class="divider-set" role="separator">
+
+    <section class="settings-container" aria-labelledby="timer-config-heading">
+      <h2 id="timer-config-heading" class="settings-title">Configurar Timer</h2>
+
+      <div class="settings-inputs">
+        <div class="input-group">
+          <label for="focus-duration" class="input-label">Focus</label>
+          <input type="range" id="focus-duration" class="range-input" min="5" max="90" value="25" step="5">
+          <span id="focus-value" class="input-value">25 min</span>
+        </div>
+
+        <div class="input-group">
+          <label for="short-break-duration" class="input-label">Pausa Curta</label>
+          <input type="range" id="short-break-duration" class="range-input" min="1" max="30" value="5" step="1">
+          <span id="short-break-value" class="input-value">5 min</span>
+        </div>
+
+        <div class="input-group">
+          <label for="long-break-duration" class="input-label">Pausa Longa</label>
+          <input type="range" id="long-break-duration" class="range-input" min="5" max="90" value="15" step="5">
+          <span id="long-break-value" class="input-value">15 min</span>
+        </div>
+
+        <div class="input-group">
+          <label for="rounds" class="input-label">Rodadas</label>
+          <input type="range" id="rounds" class="range-input" min="1" max="10" value="4" step="1">
+          <span id="rounds-value" class="input-value">4</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="toggle-container">
+      <div class="toggle-settings">
+        <h3 class="toggle-header">Configurações adicionais</h3>
+        <div class="toggle-row">
+          <label for="sound-alert-toggle" class="toggle-label">Alerta Sonoro</label>
+          <button id="sound-alert-toggle" class="toggle-switch" role="switch" aria-checked="false">
+            <span class="toggle-slider"></span>
+          </button>
+        </div>
+
+        <div class="toggle-row">
+          <label for="auto-check-toggle" class="toggle-label">Verificar tarefas automaticamente</label>
+          <button id="auto-check-toggle" class="toggle-switch" role="switch" aria-checked="false">
+            <span class="toggle-slider"></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <hr class="divider-set" role="separator">
+
+    <section>
+      <button id="confirm-settings-btn" class="btn btn-primary btn-full">
+        CONFIRMAR
+      </button>
+    </section>
   </section>
 
   <hr class="divider">

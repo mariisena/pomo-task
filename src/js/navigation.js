@@ -11,12 +11,34 @@ class NavigationManager {
   }
 
   init() {
-    this.bindEvents();
     this.loadSavedView();
+    // Esperar o iframe carregar antes de adicionar eventos
+    const headerFrame = document.querySelector('.header-frame');
+    if (headerFrame) {
+      headerFrame.addEventListener('load', () => {
+        this.bindEvents();
+      });
+      // Se já carregou, chamar imediatamente
+      if (headerFrame.contentDocument && headerFrame.contentDocument.readyState === 'complete') {
+        this.bindEvents();
+      }
+    } else {
+      this.bindEvents();
+    }
   }
 
   bindEvents() {
-    const openSettingsBtn = document.getElementById('open-settings');
+    // Tentar encontrar o botão no documento principal
+    let openSettingsBtn = document.getElementById('open-settings');
+
+    // Se não encontrar, procurar no iframe do header
+    if (!openSettingsBtn) {
+      const headerFrame = document.querySelector('.header-frame');
+      if (headerFrame && headerFrame.contentDocument) {
+        openSettingsBtn = headerFrame.contentDocument.getElementById('open-settings');
+      }
+    }
+
     if (openSettingsBtn) {
       openSettingsBtn.addEventListener('click', () => this.showView('settings'));
     }
