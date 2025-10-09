@@ -1,5 +1,8 @@
 # 🍅 PomoTask
 
+[![CI - Build & E2E Tests](https://github.com/mariisena/pomo-task/actions/workflows/ci.yml/badge.svg)](https://github.com/mariisena/pomo-task/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Extensão Pomodoro com lista de tarefas integrada para Google Chrome.
 Foque, organize e conclua suas metas de forma prática!
 
