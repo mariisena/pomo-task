@@ -208,14 +208,24 @@ test.describe('PomoTask Extension E2E', () => {
     const popupPage = await context.newPage();
     await popupPage.goto(`chrome-extension://${extensionId}/src/popup/popup.html`);
 
+    // Aguarda página carregar completamente
+    await popupPage.waitForLoadState('networkidle');
+    await popupPage.waitForTimeout(1000);
+
     // Espera o iframe do header carregar
     const headerFrame = popupPage.frameLocator('.header-frame');
 
-    // Clica no botão de configurações (aguarda o iframe carregar)
-    await headerFrame.locator('#open-settings').click({ timeout: 5000 });
+    // Aguarda o botão estar visível no iframe
+    await headerFrame.locator('#open-settings').waitFor({ state: 'visible', timeout: 5000 });
+
+    // Clica no botão de configurações
+    await headerFrame.locator('#open-settings').click();
+
+    // Aguarda a navegação acontecer (classe hidden ser removida)
+    await popupPage.waitForTimeout(500);
 
     // Verifica se a tela de configurações está visível
-    await expect(popupPage.locator('#settings-view')).toBeVisible();
+    await expect(popupPage.locator('#settings-view')).toBeVisible({ timeout: 10000 });
     await expect(popupPage.locator('#focus-duration')).toBeVisible();
 
     await popupPage.close();
