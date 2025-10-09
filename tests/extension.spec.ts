@@ -30,53 +30,104 @@ test.beforeAll(async () => {
   });
 
   // Aguarda um pouco para extensão carregar
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 3000));
 
-  // Tenta capturar o ID do service worker
+  // Método 1: Aguardar evento de service worker
   try {
     const [serviceWorker] = await Promise.all([
-      context.waitForEvent('serviceworker', { timeout: 5000 }),
+      context.waitForEvent('serviceworker', { timeout: 10000 }),
     ]);
     const swUrl = serviceWorker.url();
     const match = swUrl.match(/chrome-extension:\/\/([a-z]+)\//);
     if (match) {
       extensionId = match[1];
+      console.log('Extension ID capturado via evento:', extensionId);
     }
   } catch (e) {
-    // Fallback: verifica se já tem service workers registrados
+    console.log('Método 1 (evento) falhou, tentando fallback...');
+  }
+
+  // Método 2: Verificar service workers já registrados
+  if (!extensionId) {
     const serviceWorkers = context.serviceWorkers();
+    console.log('Service workers disponíveis:', serviceWorkers.length);
     if (serviceWorkers.length > 0) {
       const swUrl = serviceWorkers[0].url();
+      console.log('Service Worker URL:', swUrl);
       const match = swUrl.match(/chrome-extension:\/\/([a-z]+)\//);
       if (match) {
         extensionId = match[1];
+        console.log('Extension ID capturado via service workers existentes:', extensionId);
       }
     }
   }
 
-  // Se ainda não tiver o ID, abre uma página para forçar o carregamento
+  // Método 3: Abrir chrome://extensions e extrair ID
   if (!extensionId) {
+    console.log('Método 2 falhou, tentando via chrome://extensions...');
     const page = await context.newPage();
-    await page.goto('about:blank');
-    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    const serviceWorkers = context.serviceWorkers();
-    if (serviceWorkers.length > 0) {
-      const swUrl = serviceWorkers[0].url();
-      const match = swUrl.match(/chrome-extension:\/\/([a-z]+)\//);
-      if (match) {
-        extensionId = match[1];
+    try {
+      // Navegar para about:blank primeiro
+      await page.goto('about:blank');
+      await page.waitForTimeout(2000);
+
+      // Aguardar service workers aparecerem
+      for (let i = 0; i < 10; i++) {
+        const serviceWorkers = context.serviceWorkers();
+        console.log(`Tentativa ${i + 1}: ${serviceWorkers.length} service workers`);
+
+        if (serviceWorkers.length > 0) {
+          const swUrl = serviceWorkers[0].url();
+          const match = swUrl.match(/chrome-extension:\/\/([a-z]+)\//);
+          if (match) {
+            extensionId = match[1];
+            console.log('Extension ID capturado após retry:', extensionId);
+            break;
+          }
+        }
+
+        await page.waitForTimeout(1000);
       }
+    } finally {
+      await page.close();
     }
+  }
 
-    await page.close();
+  // Método 4: Navegar diretamente para chrome://extensions (última tentativa)
+  if (!extensionId) {
+    console.log('Tentando último método: navegar para extensão diretamente...');
+    const page = await context.newPage();
+
+    try {
+      // Lista todas as páginas abertas pela extensão
+      const pages = context.pages();
+      for (const p of pages) {
+        const url = p.url();
+        if (url.startsWith('chrome-extension://')) {
+          const match = url.match(/chrome-extension:\/\/([a-z]+)\//);
+          if (match) {
+            extensionId = match[1];
+            console.log('Extension ID capturado via páginas abertas:', extensionId);
+            break;
+          }
+        }
+      }
+    } finally {
+      await page.close();
+    }
   }
 
   if (!extensionId) {
-    throw new Error('Não foi possível obter o ID da extensão. Service workers disponíveis: ' + context.serviceWorkers().length);
+    const pages = context.pages();
+    const pageUrls = pages.map(p => p.url()).join(', ');
+    throw new Error(`Não foi possível obter o ID da extensão após todos os métodos.
+Service workers: ${context.serviceWorkers().length}
+Páginas abertas: ${pages.length}
+URLs: ${pageUrls}`);
   }
 
-  console.log('Extension ID capturado:', extensionId);
+  console.log('✅ Extension ID capturado com sucesso:', extensionId);
 });
 
 test.afterAll(async () => {
