@@ -2,11 +2,8 @@
 <html lang="pt-BR">
 
 <head>
-    <!-- codificação de caracteres -->
     <meta charset="UTF-8">
-    <!-- funcionar em telas pequenas -->
-    <meta name="viewport" content="width=device-width" , initial-scale="1.0">
-    <!-- título da aba do navegador -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomo Task</title>
 
     <link rel="stylesheet" href="/src/popup/popup.css">
@@ -19,11 +16,17 @@
             <div class="title-site">
                 <h1 id="settings-heading" class="main-title-set">POMO TASKS</h1>
             </div>
-            <button type="button" id="back-to-main" class="btn-settings" aria-label="Voltar para tela principal">
+            <button type="button" id="back-to-main" class="back-btn" aria-label="Voltar para tela principal">
                 <img src="/icons/seta-para-a-esquerda.svg" alt="" width="20" height="20" aria-hidden="true">
                 <span>Voltar</span>
             </button>
         </header>
+
+        <!-- Botão para abrir a janela externa -->
+        <button id="open-timer-window-btn" aria-label="Abrir Timer em nova janela">
+            Abrir Timer em Janela Separada
+        </button>
+
     </section>
 
     <hr class="divider-set" role="separator">
@@ -102,20 +105,17 @@
             CONFIRMAR
         </button>
         <div id="confirm-help" class="sr-only">Salvar todas as configurações</div>
-        </div>
     </section>
 
-</body>
+    <hr class="divider-set" role="separator">
+    <iframe class="footer-frame" src="/src/popup/html/footer.html"></iframe>
 
-<hr class="divider-set" role="separator">
-
-<iframe class="footer-frame" src="/src/popup/html/footer.html"></iframe>
-
-<!-- Scripts -->
-<script src="/src/js/navigation.js"></script>
-<script src="/src/js/tasks.js"></script>
-<script src="/src/js/settings.js"></script>
-<script src="/src/js/timer.js"></script>
+    <!-- Scripts -->
+    <script src="/src/js/navigation.js"></script>
+    <script src="/src/js/tasks.js"></script>
+    <script src="/src/js/settings.js"></script>
+    <script src="/src/js/pomodoro-timer.js"></script>
+    <script src="/src/js/popup.js"></script>
 </body>
 
 </html>

@@ -10,7 +10,6 @@
     "offscreen",
     "windows"
   ],
-  "host_permissions": [],
   "background": {
     "service_worker": "src/background/service-worker.js"
   },
@@ -29,6 +28,6 @@
     "128": "icons/tomato.png"
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self';"
+    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }

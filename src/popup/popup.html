@@ -2,113 +2,102 @@
 <html lang="pt-BR">
 
 <head>
-  <!-- codificação de caracteres -->
   <meta charset="UTF-8">
-  <!-- funcionar em telas pequenas -->
-  <meta name="viewport" content="width=device-width" , initial-scale="1.0">
-  <!-- título da aba do navegador -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pomo Task</title>
 
   <link rel="stylesheet" href="/src/popup/styles/variable.css">
   <link rel="stylesheet" href="/src/popup/popup.css">
   <link rel="stylesheet" href="/src/popup/styles/popup_responsive.css">
+
+  <style>
+    /* Garantir tamanho fixo da popup */
+    body {
+      width: 360px;
+      height: 520px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+  </style>
 </head>
 
 <body>
   <section class="main-container" id="main-view">
-    <!-- Incluindo o cabeçalho -->
     <iframe class="header-frame" src="/src/popup/html/header.html" title="header"></iframe>
 
-    <!-- Tela Principal -->
     <div class="timer-section" aria-labelledby="timer-heading">
       <h2 id="timer-heading" class="sr-only">Timer Pomodoro</h2>
     </div>
 
-    <!-- Seção do Timer -->
     <section class="card-section">
-      <div class="timer-card">
-        <div id="mode-display" class="mode-display" aria-live="polite">
-          Focus
-        </div>
-
-        <div id="timer-display" class="timer-display" aria-live="polite" aria-label="Tempo restante">
-          25:00
-        </div>
-
-        <div id="round-display" class="round-display" aria-live="polite">
-          Round: 1 / 4
-        </div>
-
-        <div class="buttons-display" role="group" aria-label="Controles do timer">
-          <div class="timer-controls" role="group" aria-label="Controles do timer">
-
-            <button id="main-start-btn" class="btn btn-primary" aria-label="Iniciar timer">
-              INICIAR
-            </button>
-
-            <button id="main-pause-btn" class="btn btn-secondary" aria-label="Pausar timer">
-              PAUSAR
-            </button>
-
-            <button id="main-reset-btn" class="btn btn-danger" aria-label="Resetar timer">
-              RESETAR
-            </button>
+      <section class="timer-section" aria-labelledby="timer-heading">
+        <h2 id="timer-heading" class="sr-only">Timer Pomodoro</h2>
+        <div class="timer-card">
+          <div id="mode-display" class="mode-display" aria-live="polite">Focus</div>
+          <div id="timer-display" class="timer-display" aria-live="polite" aria-label="Tempo restante">25:00
           </div>
+          <div id="round-display" class="round-display" aria-live="polite">Round: 1 / 4</div>
+
+          <section class="buttons-display">
+            <div class="timer-controls" role="group" aria-label="Controles do timer">
+              <button id="main-start-btn" class="btn btn-primary" aria-label="Iniciar timer">
+                INICIAR
+              </button>
+
+              <button id="main-pause-btn" class="btn btn-secondary" aria-label="Pausar timer">
+                PAUSAR
+              </button>
+
+              <button id="main-reset-btn" class="btn btn-danger" aria-label="Resetar timer">
+                RESETAR
+              </button>
+          </section>
         </div>
-      </div>
+      </section>
+
+      <!-- Botão para abrir a janela externa -->
+      <button id="open-timer-window-btn" aria-label="Abrir Timer em nova janela">
+        Abrir Timer em Janela Separada
+      </button>
+      <hr class="divider">
     </section>
 
-    <hr class="divider" role="separator">
-
-    <!-- Seção de Tarefas (igual à anterior) -->
     <section class="task-menu-title">
       <div class="tasks-header">
         <h2 id="tasks-heading" class="tasks-title">Tarefas</h2>
       </div>
-
       <div class="tasks-menu-container">
-        <button type="button" id="task-menu-btn" class="menu-btn" aria-label="Menu de opções das tarefas"
-          aria-expanded="false" aria-haspopup="true">
-          <img src="/icons/menu.svg" alt="menu-tasks" width="30" height="30" aria-hidden="true">
+        <button type="button" id="task-menu-btn" class="menu-btn" aria-expanded="false" aria-haspopup="true">
+          <img src="/icons/menu.svg" alt="menu-tasks" width="30" height="30">
         </button>
       </div>
     </section>
 
-    <div id="task-menu" class="dropdown-menu" role="menu" aria-labelledby="task-menu-btn">
-      <button role="menuitem" id="clear-completed-btn" class="menu-item">
-        Limpar tarefas concluídas
-      </button>
-      <hr class="menu-divider" role="separator">
-      <button role="menuitem" id="clear-all-btn" class="menu-item">
-        Limpar todas as tarefas
-      </button>
+    <div id="task-menu" class="dropdown-menu">
+      <button id="clear-completed-btn" class="menu-item">Limpar tarefas concluídas</button>
+      <hr class="menu-divider">
+      <button id="clear-all-btn" class="menu-item">Limpar todas as tarefas</button>
     </div>
 
     <form id="add-task-form" class="add-task-form">
-      <label for="task-input" class="sr-only">Nova tarefa</label>
-      <input type="text" id="task-input" class="task-input" placeholder="Adicionar tarefa"
-        aria-describedby="task-input-help" maxlength="100">
-
-      <div id="task-input-help" class="sr-only">Digite o nome da nova tarefa e pressione Enter ou clique no botão
-        adicionar
-      </div>
-
-      <button type="submit" id="add-btn" class="add-btn" aria-label="Adicionar tarefa">
-        <img src="/icons/mais.svg" alt="" width="24" height="24" aria-hidden="true">
+      <input type="text" id="task-input" class="task-input" placeholder="Adicionar tarefa" maxlength="100">
+      <button type="submit" id="add-btn" class="add-btn">
+        <img src="/icons/mais.svg" alt="" width="24" height="24">
       </button>
     </form>
   </section>
 
-  <hr class="divider" role="separator">
+  <hr class="divider">
 
   <iframe class="footer-frame" src="/src/popup/html/footer.html"></iframe>
-</body>
 
-<!-- Scripts -->
-<script src="/src/js/navigation.js"></script>
-<script src="/src/js/tasks.js"></script>
-<script src="/src/js/settings.js"></script>
-<script src="/src/js/timer.js"></script>
+  <!-- Scripts -->
+  <script src="/src/js/navigation.js"></script>
+  <script src="/src/js/pomodoro-timer.js"></script>
+  <script src="/src/js/tasks.js"></script>
+  <script src="/src/js/settings.js"></script>
+  <script src="/src/js/popup.js"></script>
 </body>
 
 </html>

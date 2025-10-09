@@ -2,11 +2,10 @@
 <html lang="pt-BR">
 
 <head>
-  <!-- codificação de caracteres -->
+
   <meta charset="UTF-8">
-  <!-- funcionar em telas pequenas -->
-  <meta name="viewport" content="width=device-width" , initial-scale="1.0">
-  <!-- título da aba do navegador -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Pomo Task</title>
 
   <link rel="stylesheet" href="/src/popup/popup.css">
@@ -60,20 +59,25 @@
       <section>
         <!-- Quick Actions -->
         <div class="quick-actions">
-          <button id="settings-btn" class="btn btn-ghost btn-mini" aria-label="Abrir configurações">
+          <button id="settings-btn" class="btn btn-mini" aria-label="Abrir configurações">
             ⚙️ Config
           </button>
           <button id="tasks-btn" class="btn btn-ghost btn-mini" aria-label="Ver tarefas">
             📝 Tarefas
           </button>
         </div>
+        <button id="open-timer-window-btn" class="btn btn-ghost btn-mini" aria-label="Abrir Timer em nova janela">
+          🪟 Nova Janela
+        </button>
+
       </section>
     </section>
 
     <!-- Scripts -->
     <script src="/src/js/navigation.js"></script>
-    <script src="/src/js/timer-window.js"></script>
+    <script src="/src/js/pomodoro-timer.js"></script>
     <script src="/src/js/settings.js"></script>
+    <script src="/src/js/popup.js"></script>
 </body>
 
 </html>

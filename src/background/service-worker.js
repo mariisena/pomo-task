@@ -1,29 +1,36 @@
 // service-worker.js — responsável por eventos em segundo plano
+// Compatível com Manifest V3
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.type === "notify") {
     showNotification(request.message);
+  }
+  if (request.type === "playSound") {
+    playSound();
   }
 });
 
 function showNotification(message) {
   chrome.notifications.create({
     type: "basic",
-    iconUrl: "icons/icon48.png",
+    iconUrl: "icons/tomato.png", // usa o mesmo ícone definido no manifest
     title: "PomoTask",
     message: message,
     priority: 2
   });
 
-  // Tocar som se for permitido
+  // Se quiser sempre tocar junto com a notificação
   playSound();
 }
 
-function playSound() {
-  // Usando offscreen para tocar áudio (Manifest V3 exige isso)
-  chrome.offscreen.createDocument({
-    url: "/src/popup/sounds.html",
-    reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
-    justification: "Tocar som de notificação ao fim do ciclo"
-  }).catch(err => console.error("Erro ao criar offscreen:", err));
+async function playSound() {
+  try {
+    await chrome.offscreen.createDocument({
+      url: "src/popup/sounds.html",
+      reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
+      justification: "Tocar som de notificação ao fim do ciclo"
+    });
+  } catch (err) {
+    console.error("Erro ao criar offscreen:", err);
+  }
 }

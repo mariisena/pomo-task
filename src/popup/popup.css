@@ -18,9 +18,9 @@
     font-family: "Inconsolata", monospace;
     font-optical-sizing: auto;
     font-weight: 700;
-    font-style: ormal;
-    font-variation-settings:
-        "width" 100;
+    font-style: normal;
+    /* era 'ormal' */
+    font-variation-settings: "width" 100;
 }
 
 .inter {
@@ -55,7 +55,7 @@ body {
 .header-frame {
     border: none;
     width: 100%;
-    height: 448px;
+    height: 192px;
     margin: 0 auto;
     align-items: center;
     position: relative;
@@ -69,7 +69,6 @@ body {
 
 .main-container {
     width: 100%;
-    max-width: 448px;
     margin: 0 auto;
     position: relative;
 }
@@ -86,10 +85,13 @@ body {
 
 .timer-card {
     background: rgba(31, 5, 40, 0.50);
-    padding: 14px;
-    border-radius: 5px;
+    padding: 20px;
+    border-radius: 12px;
     border: 1px solid #475569;
     text-align: center;
+    margin: 0 auto 16px auto;
+    /* centraliza + espaçamento */
+    max-width: 90%;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
@@ -111,7 +113,7 @@ body {
 
 .round-display {
     font-family: "Inter", sans-serif;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 700;
     color: #94a3b8;
 }
@@ -244,9 +246,16 @@ body {
     padding-bottom: 4px;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
     z-index: 10;
-    /* Garante que fique na frente */
     display: none;
-    /* Começa escondido */
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.dropdown-menu.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 
@@ -260,7 +269,8 @@ body {
     padding: 8px 16px;
     background: none;
     border: none;
-    font-size: 400;
+    font-weight: 400;
+    /* era font-size: 400; */
     cursor: pointer;
 }
 
@@ -308,7 +318,8 @@ body {
     background-color: transparent;
     border: none;
     padding: 16px;
-    font-family: "Inconsolate", monospace;
+    font-family: "Inconsolata", monospace;
+    /* era 'Inconsolate' */
     font-size: 18px;
     font-weight: 700;
 }
@@ -399,6 +410,7 @@ body {
 .footer-frame {
     border: none;
     width: 100%;
+    height: 40px; /* altura menor pro rodapé */
     margin: 0 auto;
     align-items: center;
     display: flex;
@@ -444,4 +456,186 @@ body {
 
 .hidden {
     display: none !important;
+}
+
+/* Botão para abrir a janela externa */
+#open-timer-window-btn {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    border-radius: 8px;
+    border: none;
+    background-color: #8b5cf6;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 150ms ease-in-out;
+}
+
+#open-timer-window-btn:hover {
+    background-color: #7c3aed;
+}
+
+/* === TIMER RUNNING STATE === */
+.timer-running {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        color: #FFFFFF;
+    }
+    50% {
+        transform: scale(1.02);
+        color: #8b5cf6;
+    }
+}
+
+/* === TASK ITEMS STYLING === */
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    margin: 4px 0;
+    background-color: #2A2A3F;
+    border-radius: 6px;
+    transition: background-color 150ms ease;
+}
+
+.task-item:hover {
+    background-color: #34344F;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.task-text {
+    flex: 1;
+    cursor: pointer;
+    user-select: none;
+}
+
+.task-edit-btn,
+.task-delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 8px;
+    opacity: 0.7;
+    transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.task-edit-btn:hover,
+.task-delete-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.task-delete-btn:hover {
+    filter: brightness(1.2);
+}
+
+.task-actions {
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transition: opacity 150ms ease;
+}
+
+.task-item:hover .task-actions {
+    opacity: 1;
+}
+
+.task-edit-input {
+    flex: 1;
+    background-color: #1E1E2F;
+    border: 2px solid #8b5cf6;
+    border-radius: 4px;
+    color: #FFFFFF;
+    padding: 4px 8px;
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+}
+
+.task-checkbox {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    accent-color: #8b5cf6;
+}
+
+.empty-message {
+    color: #64748B;
+    text-align: center;
+    padding: 16px;
+    font-style: italic;
+}
+
+/* Animação para timer rodando */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.timer-running {
+    animation: pulse 2s ease-in-out infinite;
+    color: #8b5cf6;
+}
+
+/* === TOGGLE SWITCH STYLING === */
+.toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background-color: #334155;
+    border-radius: 13px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 200ms ease;
+}
+
+.toggle-switch.active {
+    background-color: #8b5cf6;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 200ms ease;
+}
+
+.toggle-switch.active .toggle-slider {
+    transform: translateX(24px);
+}
+
+/* === PROGRESS RING === */
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-background {
+    stroke: #334155;
+}
+
+.progress-ring-progress {
+    stroke: #8b5cf6;
+    transition: stroke-dashoffset 0.3s ease;
 }
