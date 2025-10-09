@@ -2,75 +2,579 @@
 <html lang="pt-BR">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PomoTask — Extensão Chrome</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍅 PomoTask - Foque. Organize. Realize.</title>
+    <meta name="description" content="Extensão Chrome que combina Pomodoro com gerenciamento de tarefas. Aumente sua produtividade!">
+
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #ec4899;
+            --dark: #1e293b;
+            --light: #f1f5f9;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
             padding: 2rem;
-            line-height: 1.6;
-            background-color: #f9f9f9;
-            color: #333;
-        }
-
-        h1,
-        h2 {
-            color: #2c3e50;
-        }
-
-        code {
-            background-color: #eee;
-            padding: 2px 4px;
-            border-radius: 4px;
-        }
-
-        .screenshot {
-            margin-top: 1rem;
-            border: 1px solid #ccc;
-            max-width: 100%;
-        }
-
-        .download {
-            margin-top: 1rem;
-            display: inline-block;
-            background-color: #2ecc71;
             color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            pointer-events: none;
+        }
+
+        .logo {
+            font-size: 8rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 600px;
+        }
+
+        .badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
             text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: white;
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary);
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 6rem 2rem;
+            position: relative;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 4rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--light);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Tech Stack Section */
+        .tech-stack {
+            background: var(--light);
+            padding: 6rem 2rem;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tech-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .tech-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Installation Section */
+        .installation {
+            background: white;
+            padding: 6rem 2rem;
+        }
+
+        .steps {
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+
+        .step {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            align-items: start;
+        }
+
+        .step-number {
+            background: var(--gradient);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .step-content p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .code-block {
+            background: var(--dark);
+            color: #7dd3fc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--gradient);
+            padding: 4rem 2rem;
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat h3 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.2rem;
+            }
+
+            .logo {
+                font-size: 5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.6s ease-out;
         }
     </style>
 </head>
 
 <body>
-    <h1>PomoTask ⏱️</h1>
-    <p>Extensão para Chrome que ajuda você a gerenciar suas tarefas usando a Técnica Pomodoro! Foco, tempo e
-        produtividade, tudo num clique.</p>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="logo">🍅</div>
+        <h1 class="animate-in">PomoTask</h1>
+        <p class="animate-in">A extensão Chrome que combina a Técnica Pomodoro com gerenciamento de tarefas. Foque, organize e realize mais!</p>
 
-    <h2>🧪 Como instalar (modo desenvolvedor)</h2>
-    <ol>
-        <li>Acesse <code>chrome://extensions</code></li>
-        <li>Ative o <strong>Modo do desenvolvedor</strong> (canto superior direito)</li>
-        <li>Clique em <strong>Carregar sem compactação</strong></li>
-        <li>Escolha a pasta do projeto com o <code>manifest.json</code></li>
-        <li>Use o ícone da extensão para abrir o popup</li>
-    </ol>
+        <div class="badges animate-in">
+            <span class="badge">⚡ Manifest V3</span>
+            <span class="badge">✅ Testes E2E</span>
+            <span class="badge">🎨 Interface Moderna</span>
+            <span class="badge">🚀 Open Source</span>
+        </div>
 
-    <h2>🔐 Permissões usadas</h2>
-    <ul>
-        <li><code>storage</code>: para salvar seus ciclos</li>
-        <li><code>tabs</code>: (se aplicável, remover se não usar)</li>
-    </ul>
+        <div class="cta-buttons animate-in">
+            <a href="https://github.com/mariisena/pomo-task/archive/refs/heads/main.zip" class="btn btn-primary">
+                📥 Baixar Agora
+            </a>
+            <a href="https://github.com/mariisena/pomo-task" class="btn btn-secondary">
+                ⭐ Ver no GitHub
+            </a>
+        </div>
+    </section>
 
-    <h2>🖼️ Visual da Extensão</h2>
-    <img src="../src/assets/logo.svg" alt="Screenshot do popup" class="screenshot" />
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat">
+                <h3>25min</h3>
+                <p>Foco Intenso</p>
+            </div>
+            <div class="stat">
+                <h3>5min</h3>
+                <p>Pausa Curta</p>
+            </div>
+            <div class="stat">
+                <h3>15min</h3>
+                <p>Pausa Longa</p>
+            </div>
+            <div class="stat">
+                <h3>100%</h3>
+                <p>Produtividade</p>
+            </div>
+        </div>
+    </section>
 
-    <h2>⬇️ Download</h2>
-    <p>Você pode baixar a versão empacotada clicando abaixo:</p>
-    <a href="https://github.com/mariisena/pomo-task/releases" class="download">🔗 Baixar Release (.zip)</a>
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">✨ Funcionalidades</h2>
+            <p class="section-subtitle">Tudo que você precisa para maximizar sua produtividade</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Timer Pomodoro</h3>
+                    <p>Personalize durações de foco, pausa curta e pausa longa. Adapte o método ao seu ritmo!</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">✅</div>
+                    <h3>Gerenciador de Tarefas</h3>
+                    <p>CRUD completo de tarefas com persistência local. Organize e acompanhe seu progresso.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <h3>Notificações Inteligentes</h3>
+                    <p>Receba alertas visuais e sonoros ao fim de cada ciclo. Nunca perca o momento da pausa!</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Histórico de Ciclos</h3>
+                    <p>Acompanhe seus pomodoros completados e veja sua evolução ao longo do tempo.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Interface Moderna</h3>
+                    <p>Design clean e responsivo com navegação intuitiva entre views.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💾</div>
+                    <h3>Persistência Local</h3>
+                    <p>Seus dados ficam salvos localmente com Chrome Storage API. Privacidade garantida!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack Section -->
+    <section class="tech-stack">
+        <div class="container">
+            <h2 class="section-title">🛠️ Tecnologias</h2>
+            <p class="section-subtitle">Construído com as melhores ferramentas</p>
+
+            <div class="tech-grid">
+                <div class="tech-item">JavaScript ES6+</div>
+                <div class="tech-item">Chrome APIs</div>
+                <div class="tech-item">Manifest V3</div>
+                <div class="tech-item">Playwright</div>
+                <div class="tech-item">GitHub Actions</div>
+                <div class="tech-item">Docker</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section class="installation">
+        <div class="container">
+            <h2 class="section-title">📦 Instalação</h2>
+            <p class="section-subtitle">Em menos de 5 minutos você está pronto para focar!</p>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Clone o Repositório</h3>
+                        <p>Baixe o código fonte diretamente do GitHub</p>
+                        <div class="code-block">git clone https://github.com/mariisena/pomo-task.git<br>cd pomo-task</div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Instale Dependências (Opcional)</h3>
+                        <p>Necessário apenas para desenvolvimento e testes</p>
+                        <div class="code-block">npm install</div>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Carregue no Chrome</h3>
+                        <p>Abra <code>chrome://extensions/</code>, ative o modo desenvolvedor, clique em "Carregar sem compactação" e selecione a pasta do projeto.</p>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Pronto! 🎉</h3>
+                        <p>Clique no ícone 🍅 na barra de extensões e comece a focar!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="https://github.com/mariisena/pomo-task">GitHub</a>
+            <a href="https://github.com/mariisena/pomo-task/blob/main/README.md">Documentação</a>
+            <a href="https://github.com/mariisena/pomo-task/blob/main/DESENVOLVIMENTO.md">Dev Log</a>
+            <a href="https://github.com/mariisena/pomo-task/issues">Reportar Bug</a>
+            <a href="https://github.com/mariisena">Desenvolvedora</a>
+        </div>
+        <p>Desenvolvido com 💜 por <strong>Mariana Sena</strong></p>
+        <p style="opacity: 0.7; margin-top: 0.5rem; font-size: 0.9rem;">Projeto acadêmico - Bootcamp II | MIT License</p>
+    </footer>
+
+    <script>
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Animação ao scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .step, .tech-item').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
 </body>
 
 </html>
