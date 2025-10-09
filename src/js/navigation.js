@@ -28,25 +28,13 @@ class NavigationManager {
   }
 
   bindEvents() {
-    // Tentar encontrar o botão no documento principal
-    let openSettingsBtn = document.getElementById('open-settings');
-
-    // Se não encontrar, procurar no iframe do header
-    if (!openSettingsBtn) {
-      const headerFrame = document.querySelector('.header-frame');
-      if (headerFrame && headerFrame.contentDocument) {
-        openSettingsBtn = headerFrame.contentDocument.getElementById('open-settings');
+    document.body.addEventListener('click', (e) => {
+      const targetButton = e.target.closest('[data-target]');
+      if (targetButton) {
+        const targetView = targetButton.dataset.target;
+        this.showView(targetView);
       }
-    }
-
-    if (openSettingsBtn) {
-      openSettingsBtn.addEventListener('click', () => this.showView('settings'));
-    }
-
-    const backToMainBtn = document.getElementById('back-to-main');
-    if (backToMainBtn) {
-      backToMainBtn.addEventListener('click', () => this.showView('main'));
-    }
+    });
   }
 
   showView(viewName) {

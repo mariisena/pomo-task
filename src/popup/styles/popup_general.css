@@ -1,0 +1,22 @@
+/* Garantir tamanho fixo da popup */
+body {
+  width: 360px;
+  height: 520px;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Views navigation */
+.view.hidden {
+  display: none;
+}
+
+#main-view {
+  display: block;
+}
+
+#main-view.hidden {
+  display: none;
+}

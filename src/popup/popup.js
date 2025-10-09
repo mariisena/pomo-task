@@ -2,6 +2,13 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initializePopup();
+
+    // Listener para mensagens do iframe
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'navigate' && window.navigationManager) {
+            window.navigationManager.showView(event.data.view);
+        }
+    });
 });
 
 function initializePopup() {

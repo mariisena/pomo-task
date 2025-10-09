@@ -16,6 +16,12 @@ class TaskManager {
         this.elements.menuBtn = document.getElementById('task-menu-btn');
         this.elements.menu = document.getElementById('task-menu');
 
+        // Elementos do Modal
+        this.elements.modal = document.getElementById('confirmation-modal');
+        this.elements.modalText = document.getElementById('modal-text');
+        this.elements.modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        this.elements.modalCancelBtn = document.getElementById('modal-cancel-btn');
+
         this.bindEvents();
         this.loadTasks().then(() => this.renderTasks());
     }
@@ -45,19 +51,21 @@ class TaskManager {
 
         // Botões do menu
         this.elements.clearAll?.addEventListener('click', () => {
-            if (confirm('Deseja realmente limpar todas as tarefas?')) {
+            this.showConfirmationModal('Deseja realmente limpar todas as tarefas?', () => {
                 this.tasks = [];
                 this.saveTasks();
                 this.renderTasks();
                 this.elements.menu?.classList.remove('show');
-            }
+            });
         });
 
         this.elements.clearCompleted?.addEventListener('click', () => {
-            this.tasks = this.tasks.filter(t => !t.completed);
-            this.saveTasks();
-            this.renderTasks();
-            this.elements.menu?.classList.remove('show');
+            this.showConfirmationModal('Deseja limpar as tarefas concluídas?', () => {
+                this.tasks = this.tasks.filter(t => !t.completed);
+                this.saveTasks();
+                this.renderTasks();
+                this.elements.menu?.classList.remove('show');
+            });
         });
 
         // Event delegation para a lista de tarefas
@@ -117,11 +125,11 @@ class TaskManager {
     }
 
     deleteTask(id) {
-        if (confirm('Deseja realmente deletar esta tarefa?')) {
+        this.showConfirmationModal('Deseja realmente deletar esta tarefa?', () => {
             this.tasks = this.tasks.filter(t => t.id !== id);
             this.saveTasks();
             this.renderTasks();
-        }
+        });
     }
 
     editTask(id, newText) {
@@ -202,6 +210,35 @@ class TaskManager {
         const result = await chrome.storage.local.get(['tasks', 'nextId']);
         if (result.tasks) this.tasks = result.tasks;
         if (result.nextId) this.nextId = result.nextId;
+    }
+
+    showConfirmationModal(message, onConfirm) {
+        if (!this.elements.modal || !this.elements.modalText || !this.elements.modalConfirmBtn || !this.elements.modalCancelBtn) {
+            console.error('Modal elements not found');
+            return;
+        }
+
+        this.elements.modalText.textContent = message;
+        this.elements.modal.style.display = 'flex';
+
+        const confirmHandler = () => {
+            if (typeof onConfirm === 'function') {
+                onConfirm();
+            }
+            hideModal();
+        };
+
+        const cancelHandler = () => {
+            hideModal();
+        };
+
+        const hideModal = () => {
+            if (!this.elements.modal) return;
+            this.elements.modal.style.display = 'none';
+        };
+
+        this.elements.modalConfirmBtn.addEventListener('click', confirmHandler, { once: true });
+        this.elements.modalCancelBtn.addEventListener('click', cancelHandler, { once: true });
     }
 }
 

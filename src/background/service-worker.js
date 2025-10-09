@@ -1,36 +1,47 @@
 // service-worker.js — responsável por eventos em segundo plano
-// Compatível com Manifest V3
 
+// Listener para mensagens de outras partes da extensão
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === "notify") {
+  if (request.type === 'notify') {
     showNotification(request.message);
-  }
-  if (request.type === "playSound") {
+  } else if (request.type === 'playSound') {
     playSound();
   }
+  // Retornar true para indicar que a resposta será assíncrona
+  return true;
 });
 
+// Função para exibir notificações
 function showNotification(message) {
   chrome.notifications.create({
-    type: "basic",
-    iconUrl: "icons/tomato.png", // usa o mesmo ícone definido no manifest
-    title: "PomoTask",
+    type: 'basic',
+    iconUrl: 'icons/tomato.png',
+    title: 'PomoTask',
     message: message,
     priority: 2
   });
-
-  // Se quiser sempre tocar junto com a notificação
-  playSound();
 }
 
+// Função para tocar som usando a API Offscreen
 async function playSound() {
-  try {
-    await chrome.offscreen.createDocument({
-      url: "src/popup/sounds.html",
-      reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
-      justification: "Tocar som de notificação ao fim do ciclo"
-    });
-  } catch (err) {
-    console.error("Erro ao criar offscreen:", err);
+  // Verifica se já existe um documento offscreen
+  if (await chrome.offscreen.hasDocument()) {
+    // Se existir, apenas envia uma mensagem para ele tocar o som
+    chrome.runtime.sendMessage({ type: 'playOffscreenSound' });
+    return;
   }
+
+  // Se não existir, cria o documento offscreen
+  await chrome.offscreen.createDocument({
+    url: 'src/popup/sounds.html',
+    reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
+    justification: 'Tocar som de notificação ao fim do ciclo'
+  });
 }
+
+// Listener para alarmes (se você usar a API de alarmes)
+chrome.alarms.onAlarm.addListener((alarm) => {
+  console.log('Alarme disparado:', alarm.name);
+  // Adicione aqui a lógica para o que acontece quando um alarme dispara
+});
+

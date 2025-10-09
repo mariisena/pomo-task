@@ -4,34 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomo Task</title>
+    <title>Pomo Task - Configurações</title>
 
     <link rel="stylesheet" href="/src/popup/popup.css">
     <link rel="stylesheet" href="/src/popup/styles/popup_settimer.css">
 </head>
 
 <body>
-    <section class="main-container" id="main-view">
-        <header class="header-set">
-            <div class="title-site">
-                <h1 id="settings-heading" class="main-title-set">POMO TASKS</h1>
-            </div>
-            <button type="button" id="back-to-main" class="back-btn" aria-label="Voltar para tela principal">
-                <img src="/icons/seta-para-a-esquerda.svg" alt="" width="20" height="20" aria-hidden="true">
-                <span>Voltar</span>
-            </button>
-        </header>
-
-        <!-- Botão para abrir a janela externa -->
-        <button id="open-timer-window-btn" aria-label="Abrir Timer em nova janela">
-            Abrir Timer em Janela Separada
+    <header class="header-set">
+        <div class="title-site">
+            <h1 id="settings-heading" class="main-title-set">POMO TASKS</h1>
+        </div>
+        <button type="button" id="back-to-main" class="back-btn" data-target="main-view" aria-label="Voltar para tela principal">
+            <img src="/icons/seta-para-a-esquerda.svg" alt="" width="20" height="20" aria-hidden="true">
+            <span>Voltar</span>
         </button>
-
-    </section>
+    </header>
 
     <hr class="divider-set" role="separator">
-
-    <div id="settings-view" class="view settings-view hidden" aria-labelledby="settings-heading"></div>
 
     <section class="settings-container" aria-labelledby="timer-config-heading">
         <h2 id="timer-config-heading" class="settings-title">Configurar Timer</h2>
@@ -65,57 +55,28 @@
                 <span id="rounds-value" class="input-value" aria-live="polite">4</span>
             </div>
         </div>
+
+        <h2 class="settings-title">Preferências</h2>
+        <div class="settings-toggles">
+            <div class="toggle-group">
+                <span class="toggle-label">Alerta de som</span>
+                <button id="sound-alert-toggle" class="toggle-btn" aria-checked="false" role="switch">
+                    <span class="toggle-handle"></span>
+                </button>
+            </div>
+            <div class="toggle-group">
+                <span class="toggle-label">Auto Check-in</span>
+                <button id="auto-check-toggle" class="toggle-btn" aria-checked="false" role="switch">
+                    <span class="toggle-handle"></span>
+                </button>
+            </div>
+        </div>
+
+        <button id="confirm-settings-btn" class="btn btn-primary confirm-btn">Salvar Configurações</button>
     </section>
 
-    <section class="toggle-container">
-        <div class="toggle-settings" role="group" aria-labelledby="toggle-settings-heading">
-            <h3 id="toggle-settings-heading" class="toggle-header">Configurações adicionais</h3>
-            <div class="toggle-row">
-                <label for="sound-alert-toggle" class="toggle-label">Alerta Sonoro</label>
-                <button id="sound-alert-toggle" class="toggle-switch" role="switch" aria-checked="false"
-                    aria-describedby="sound-alert-help">
-                    <span class="toggle-slider"></span>
-                </button>
-                <div id="sound-alert-help" class="sr-only">Ativar ou desativar som de notificação</div>
-            </div>
-
-            <div class="toggle-row">
-                <label for="auto-check-toggle" class="toggle-label">Verificar tarefas automaticamente</label>
-                <button id="auto-check-toggle" class="toggle-switch" role="switch" aria-checked="false"
-                    aria-describedby="auto-check-help">
-                    <span class="toggle-slider"></span>
-                </button>
-                <div id="auto-check-help" class="sr-only">Marcar tarefas como concluídas automaticamente</div>
-            </div>
-
-            <div class="toggle-row">
-                <label for="mini-window-toggle" class="toggle-label">Abrir em janela pequena</label>
-                <button id="mini-window-toggle" class="toggle-switch" role="switch" aria-checked="false"
-                    aria-describedby="mini-window-help">
-                    <span class="toggle-slider"></span>
-                </button>
-                <div id="mini-window-help" class="sr-only">Usar visualização compacta por padrão</div>
-            </div>
-    </section>
-
-    <hr class="divider-set" role="separator">
-
-    <section>
-        <button id="confirm-settings-btn" class="btn btn-primary btn-full" aria-describedby="confirm-help">
-            CONFIRMAR
-        </button>
-        <div id="confirm-help" class="sr-only">Salvar todas as configurações</div>
-    </section>
-
-    <hr class="divider-set" role="separator">
-    <iframe class="footer-frame" src="/src/popup/html/footer.html"></iframe>
-
-    <!-- Scripts -->
-    <script src="/src/js/navigation.js"></script>
-    <script src="/src/js/tasks.js"></script>
     <script src="/src/js/settings.js"></script>
-    <script src="/src/js/pomodoro-timer.js"></script>
-    <script src="/src/js/popup.js"></script>
+    <script src="/src/js/navigation.js"></script>
 </body>
 
 </html>

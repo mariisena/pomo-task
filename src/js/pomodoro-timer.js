@@ -118,7 +118,13 @@ class PomodoroTimer {
     }
 
     updateDisplay() {
-        if (this.modeEl) this.modeEl.textContent = this.state.mode;
+        const modeTranslations = {
+            focus: 'Foco',
+            shortBreak: 'Pausa Curta',
+            longBreak: 'Pausa Longa'
+        };
+
+        if (this.modeEl) this.modeEl.textContent = modeTranslations[this.state.mode] || this.state.mode;
         if (this.timerEl) {
             const m = Math.floor(this.state.timeLeft / 60).toString().padStart(2, '0');
             const s = (this.state.timeLeft % 60).toString().padStart(2, '0');

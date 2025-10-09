@@ -10,40 +10,12 @@
   <link rel="stylesheet" href="/src/popup/popup.css">
   <link rel="stylesheet" href="/src/popup/styles/popup_settimer.css">
   <link rel="stylesheet" href="/src/popup/styles/popup_responsive.css">
-
-  <style>
-    /* Garantir tamanho fixo da popup */
-    body {
-      width: 360px;
-      height: 520px;
-      margin: 0;
-      padding: 0;
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-
-    /* Views navigation */
-    .view.hidden {
-      display: none;
-    }
-
-    #main-view {
-      display: block;
-    }
-
-    #main-view.hidden {
-      display: none;
-    }
-  </style>
+  <link rel="stylesheet" href="/src/popup/styles/popup_general.css">
 </head>
 
 <body>
   <section class="main-container" id="main-view">
     <iframe class="header-frame" src="/src/popup/html/header.html" title="header"></iframe>
-
-    <div class="timer-section" aria-labelledby="timer-heading">
-      <h2 id="timer-heading" class="sr-only">Timer Pomodoro</h2>
-    </div>
 
     <section class="card-section">
       <section class="timer-section" aria-labelledby="timer-heading">
@@ -98,10 +70,24 @@
 
     <form id="add-task-form" class="add-task-form">
       <input type="text" id="task-input" class="task-input" placeholder="Adicionar tarefa" maxlength="100">
-      <button type="submit" id="add-btn" class="add-btn">
-        <img src="/icons/mais.svg" alt="" width="24" height="24">
+      <button type="submit" id="add-btn" class="add-task-btn" aria-label="Adicionar tarefa">
+        <img src="/icons/mais.svg" alt="adicionar" width="24" height="24">
       </button>
     </form>
+
+    <!-- Modal de Confirmação -->
+    <div id="confirmation-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-content">
+        <h2 id="modal-title" class="modal-title">Confirmar Ação</h2>
+        <p id="modal-text" class="modal-text">Você tem certeza?</p>
+        <div class="modal-buttons">
+          <button id="modal-confirm-btn" class="btn btn-primary">Confirmar</button>
+          <button id="modal-cancel-btn" class="btn btn-secondary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <iframe class="footer-frame" src="/src/popup/html/footer.html" title="footer"></iframe>
   </section>
 
   <!-- Settings View -->
@@ -174,8 +160,6 @@
   </section>
 
   <hr class="divider">
-
-  <iframe class="footer-frame" src="/src/popup/html/footer.html"></iframe>
 
   <!-- Scripts -->
   <script src="/src/js/navigation.js"></script>
