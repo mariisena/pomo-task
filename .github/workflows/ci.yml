@@ -30,7 +30,7 @@ jobs:
         run: npm run build
 
       - name: Rodar testes E2E
-        run: npm run test:e2e
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" npm run test:e2e
 
       - name: Publicar relatório do Playwright
         if: always()
