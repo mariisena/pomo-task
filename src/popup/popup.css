@@ -48,17 +48,20 @@ body {
     font-family: "Inter", sans-serif;
     color: #FFFFFF;
     line-height: 1.5;
-    padding: 16px;
+    padding: 0;
+    margin: 0;
     font-size: 16px;
+    overflow-x: hidden;
 }
 
 .header-frame {
     border: none;
     width: 100%;
-    height: 192px;
-    margin: 0 auto;
+    height: 60px;
+    margin: 0;
     align-items: center;
     position: relative;
+    overflow: hidden;
 }
 
 .divider {
@@ -71,6 +74,7 @@ body {
     width: 100%;
     margin: 0 auto;
     position: relative;
+    padding: 16px;
 }
 
 #main-view {
@@ -85,59 +89,61 @@ body {
 
 .timer-card {
     background: rgba(31, 5, 40, 0.50);
-    padding: 20px;
+    padding: 16px;
     border-radius: 12px;
     border: 1px solid #475569;
     text-align: center;
     margin: 0 auto 16px auto;
-    /* centraliza + espaçamento */
-    max-width: 90%;
+    max-width: 100%;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
 /* Display do Timer */
 .mode-display {
     font-family: "Anton", sans-serif;
-    font-size: 48px;
+    font-size: 24px;
     font-weight: 400;
     color: #FFF;
+    margin-bottom: 8px;
 }
 
 .timer-display {
     font-family: "Inter", sans-serif;
     color: #FFFFFF;
-    font-size: 96px;
-    line-height: 1.25;
+    font-size: 48px;
+    line-height: 1.2;
     font-weight: 700;
+    margin: 12px 0;
 }
 
 .round-display {
     font-family: "Inter", sans-serif;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     color: #94a3b8;
+    margin-top: 8px;
 }
 
 /* Estilização dos botões */
 .buttons-display {
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
 }
 
 /* Botões Base */
 .btn {
     display: inline-flex;
     align-items: center;
-    justify-content: space-around;
-    gap: 15px;
-    padding: 12px 16px;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
     border: none;
     border-radius: 8px;
     font-family: "Inter", sans-serif;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 600;
     line-height: 1;
     cursor: pointer;
@@ -145,6 +151,7 @@ body {
     text-decoration: none;
     white-space: nowrap;
     user-select: none;
+    flex: 1;
 }
 
 .btn:hover {
@@ -262,16 +269,16 @@ body {
 
 /* Estilo base para os links dentro do menu */
 .menu-item {
-    font-size: 20px;
+    font-size: 14px;
     color: #cbd5e1;
     display: block;
     width: 100%;
-    padding: 8px 16px;
+    padding: 10px 16px;
     background: none;
     border: none;
     font-weight: 400;
-    /* era font-size: 400; */
     cursor: pointer;
+    text-align: left;
 }
 
 .menu-item:hover,
@@ -410,10 +417,11 @@ body {
 .footer-frame {
     border: none;
     width: 100%;
-    height: 40px; /* altura menor pro rodapé */
-    margin: 0 auto;
+    height: 40px;
+    margin: 0;
     align-items: center;
     display: flex;
+    overflow: hidden;
 }
 
 /* === TIMER WINDOW BUTTON === */
@@ -436,9 +444,18 @@ body {
 /* === SETTINGS ACTIONS === */
 
 .settings-actions {
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding-top: 0;
+}
+
+.settings-actions .btn {
+    width: auto;
+    min-width: 120px;
+    max-width: 180px;
+    padding: 10px 20px;
+    font-size: 13px;
 }
 
 /* .visually-hidden = invisível visualmente, mas sem remover do fluxo (redundante com sr-only)*/
@@ -649,27 +666,33 @@ body {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   justify-content: center;
   align-items: center;
 }
 
 .modal-content {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
+  background-color: #2D2D3F;
+  padding: 24px;
+  border-radius: 12px;
   text-align: center;
-  width: 80%;
-  max-width: 300px;
+  width: 85%;
+  max-width: 320px;
+  border: 1px solid #475569;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
 .modal-title {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #FFFFFF;
 }
 
 .modal-text {
   margin-bottom: 20px;
+  color: #cbd5e1;
+  font-size: 14px;
 }
 
 .modal-buttons {

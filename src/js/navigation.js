@@ -38,11 +38,14 @@ class NavigationManager {
   }
 
   showView(viewName) {
-    if (!this.views[viewName]) return;
+    // Normaliza o nome da view (remove '-view' se existir)
+    const normalizedName = viewName.replace('-view', '');
+
+    if (!this.views[normalizedName]) return;
 
     Object.values(this.views).forEach(v => v?.classList.add('hidden'));
-    this.views[viewName].classList.remove('hidden');
-    this.currentView = viewName;
+    this.views[normalizedName].classList.remove('hidden');
+    this.currentView = normalizedName;
     chrome.storage.local.set({ currentView: this.currentView });
   }
 

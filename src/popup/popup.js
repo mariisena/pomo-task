@@ -5,8 +5,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Listener para mensagens do iframe
     window.addEventListener('message', (event) => {
-        if (event.data.type === 'navigate' && window.navigationManager) {
-            window.navigationManager.showView(event.data.view);
+        console.log('Message received:', event.data);
+
+        if (event.data.type === 'navigate') {
+            // Esperar o navigationManager estar pronto
+            const navigate = () => {
+                if (window.navigationManager) {
+                    console.log('Navigating to:', event.data.view);
+                    window.navigationManager.showView(event.data.view);
+                } else {
+                    console.log('NavigationManager not ready, waiting...');
+                    setTimeout(navigate, 100);
+                }
+            };
+            navigate();
         }
     });
 });

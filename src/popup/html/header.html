@@ -6,12 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pomo Task</title>
 
-    <link rel="stylesheet" href="/src/popup.css">
+    <link rel="stylesheet" href="/src/popup/popup.css">
 </head>
 
 <style>
-    body { 
-        margin: 0; 
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
     }
 
     .header {
@@ -19,30 +21,33 @@
         align-items: center;
         justify-content: space-between;
         gap: 10px;
+        padding: 12px 16px;
     }
 
     #title-site {
         color: #04D797;
         font-family: "Koulen", sans-serif;
-        font-size: 40px;
-        font-weight: 900;
-        letter-spacing: 1.5px;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        margin: 0;
+        line-height: 1;
     }
 
     .btn-settings {
-        gap: 8px;
-        padding: 8px 12px;
+        gap: 6px;
+        padding: 6px 10px;
         background-color: #2D2D3F;
         border: none;
         border-radius: 8px;
         color: #FFFFFF;
         font-family: "Inconsolata", monospace;
-        font-size: 18px;
+        font-size: 14px;
         font-weight: 700;
-        transition-duration: 150ms ease-in-out;
-        border: none;
+        transition: background-color 150ms ease-in-out;
         cursor: pointer;
-        color: white
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     .btn-settings:hover {
@@ -57,7 +62,7 @@
     #text-btn {
         color: #FFF;
         font-family: "Inconsolata", monospace;
-        font-size: 18px;
+        font-size: 14px;
         font-weight: 700;
     }
 
@@ -73,7 +78,7 @@
     </div>
 
     <div>
-        <button id="open-settings" class="btn-settings" data-target="settings-view" aria-label="Configurações">
+        <button id="open-settings" class="btn-settings" data-target="settings" aria-label="Configurações">
             <span id="text-btn">⚙️ Configurações</span>
         </button>
     </div>

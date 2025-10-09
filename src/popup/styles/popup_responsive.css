@@ -17,13 +17,14 @@
         font-size: var(--font-size-4xl);
     }
 
+    /* Mantendo botões horizontais conforme design do Figma */
     .timer-controls {
-        flex-direction: column;
-        gap: var(--spacing-md);
+        flex-direction: row;
+        gap: 8px;
     }
 
     .btn {
-        width: 100%;
+        flex: 1;
     }
 
     .input-group {
