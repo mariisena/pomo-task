@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const settingsBtn = document.getElementById('settings-btn');
+    const settingsBtn = document.getElementById('open-settings');
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
             // Envia uma mensagem para a janela pai (popup.html) para navegar
