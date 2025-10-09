@@ -19,7 +19,7 @@ test.beforeAll(async () => {
 
   // Lança o Chromium com a extensão carregada
   context = await chromium.launchPersistentContext(tmpDir, {
-    headless: false,
+    headless: process.env.CI === 'true', // Headless no CI/Docker, headed localmente
     args: [
       `--disable-extensions-except=${distPath}`,
       `--load-extension=${distPath}`,
@@ -43,22 +43,42 @@ test.afterAll(async () => {
 
 // Helper para obter o ID da extensão
 async function getExtensionId(context: BrowserContext): Promise<string> {
-  const serviceWorkers = context.serviceWorkers();
+  // Tenta pegar o ID do service worker
+  let serviceWorkers = context.serviceWorkers();
+
+  // Se não houver service workers, aguarda um pouco e tenta novamente
+  if (serviceWorkers.length === 0) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    serviceWorkers = context.serviceWorkers();
+  }
+
   if (serviceWorkers.length > 0) {
     const url = serviceWorkers[0].url();
     const match = url.match(/chrome-extension:\/\/([a-z]+)\//);
     if (match) return match[1];
   }
 
-  // Fallback: tenta pegar da primeira página
-  const pages = context.pages();
-  for (const page of pages) {
-    const url = page.url();
-    const match = url.match(/chrome-extension:\/\/([a-z]+)\//);
-    if (match) return match[1];
-  }
+  // Fallback: abre chrome://extensions e pega o ID via JavaScript
+  const page = await context.newPage();
+  await page.goto('chrome://extensions');
 
-  return '';
+  // Injeta script para pegar o ID da extensão
+  const extensionId = await page.evaluate(() => {
+    const extensionElements = document.querySelectorAll('extensions-item');
+    for (const el of extensionElements) {
+      const shadowRoot = el.shadowRoot;
+      if (shadowRoot) {
+        const nameEl = shadowRoot.querySelector('#name');
+        if (nameEl && nameEl.textContent?.includes('PomoTask')) {
+          return el.getAttribute('id') || '';
+        }
+      }
+    }
+    return '';
+  });
+
+  await page.close();
+  return extensionId || '';
 }
 
 test.describe('PomoTask Extension E2E', () => {
