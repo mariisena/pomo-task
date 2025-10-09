@@ -10,6 +10,7 @@ const distPath = path.resolve(__dirname, '..', 'dist');
 const tmpDir = path.resolve(__dirname, '..', '.tmp-profile');
 
 let context: BrowserContext;
+let extensionId = '';
 
 test.beforeAll(async () => {
   // Cria diretório temporário para o perfil
@@ -28,8 +29,48 @@ test.beforeAll(async () => {
     ],
   });
 
-  // Aguarda um pouco para a extensão carregar
+  // Aguarda um pouco para extensão carregar
   await new Promise(resolve => setTimeout(resolve, 2000));
+
+  // Tenta capturar o ID do service worker
+  try {
+    const [serviceWorker] = await Promise.all([
+      context.waitForEvent('serviceworker', { timeout: 5000 }),
+    ]);
+    const swUrl = serviceWorker.url();
+    const match = swUrl.match(/chrome-extension:\/\/([a-z]+)\//);
+    if (match) {
+      extensionId = match[1];
+    }
+  } catch (e) {
+    // Fallback: verifica se já tem service workers registrados
+    const serviceWorkers = context.serviceWorkers();
+    if (serviceWorkers.length > 0) {
+      const swUrl = serviceWorkers[0].url();
+      const match = swUrl.match(/chrome-extension:\/\/([a-z]+)\//);
+      if (match) {
+        extensionId = match[1];
+      }
+    }
+  }
+
+  // Se ainda não tiver o ID, abre uma página para forçar o carregamento
+  if (!extensionId) {
+    const pages = context.pages();
+    if (pages.length > 0) {
+      await pages[0].goto('about:blank');
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const serviceWorkers = context.serviceWorkers();
+    if (serviceWorkers.length > 0) {
+      const swUrl = serviceWorkers[0].url();
+      const match = swUrl.match(/chrome-extension:\/\/([a-z]+)\//);
+      if (match) {
+        extensionId = match[1];
+      }
+    }
+  }
 });
 
 test.afterAll(async () => {
@@ -41,54 +82,14 @@ test.afterAll(async () => {
   }
 });
 
-// Helper para obter o ID da extensão
-async function getExtensionId(context: BrowserContext): Promise<string> {
-  // Tenta pegar o ID do service worker
-  let serviceWorkers = context.serviceWorkers();
-
-  // Se não houver service workers, aguarda um pouco e tenta novamente
-  if (serviceWorkers.length === 0) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    serviceWorkers = context.serviceWorkers();
-  }
-
-  if (serviceWorkers.length > 0) {
-    const url = serviceWorkers[0].url();
-    const match = url.match(/chrome-extension:\/\/([a-z]+)\//);
-    if (match) return match[1];
-  }
-
-  // Fallback: abre chrome://extensions e pega o ID via JavaScript
-  const page = await context.newPage();
-  await page.goto('chrome://extensions');
-
-  // Injeta script para pegar o ID da extensão
-  const extensionId = await page.evaluate(() => {
-    const extensionElements = document.querySelectorAll('extensions-item');
-    for (const el of extensionElements) {
-      const shadowRoot = el.shadowRoot;
-      if (shadowRoot) {
-        const nameEl = shadowRoot.querySelector('#name');
-        if (nameEl && nameEl.textContent?.includes('PomoTask')) {
-          return el.getAttribute('id') || '';
-        }
-      }
-    }
-    return '';
-  });
-
-  await page.close();
-  return extensionId || '';
-}
-
 test.describe('PomoTask Extension E2E', () => {
   test('service worker está ativo', async () => {
+    expect(extensionId).toBeTruthy();
     const serviceWorkers = context.serviceWorkers();
     expect(serviceWorkers.length).toBeGreaterThan(0);
   });
 
   test('popup HTML existe e carrega elementos principais', async () => {
-    const extensionId = await getExtensionId(context);
     expect(extensionId).toBeTruthy();
 
     // Abre o popup da extensão
@@ -104,7 +105,6 @@ test.describe('PomoTask Extension E2E', () => {
   });
 
   test('timer exibe tempo inicial correto', async () => {
-    const extensionId = await getExtensionId(context);
     const popupPage = await context.newPage();
     await popupPage.goto(`chrome-extension://${extensionId}/src/popup/popup.html`);
 
@@ -115,7 +115,6 @@ test.describe('PomoTask Extension E2E', () => {
   });
 
   test('é possível adicionar uma tarefa', async () => {
-    const extensionId = await getExtensionId(context);
     const popupPage = await context.newPage();
     await popupPage.goto(`chrome-extension://${extensionId}/src/popup/popup.html`);
 
@@ -131,7 +130,6 @@ test.describe('PomoTask Extension E2E', () => {
   });
 
   test('botões do timer estão funcionais', async () => {
-    const extensionId = await getExtensionId(context);
     const popupPage = await context.newPage();
     await popupPage.goto(`chrome-extension://${extensionId}/src/popup/popup.html`);
 
@@ -148,7 +146,6 @@ test.describe('PomoTask Extension E2E', () => {
   });
 
   test('navegação para tela de configurações funciona', async () => {
-    const extensionId = await getExtensionId(context);
     const popupPage = await context.newPage();
     await popupPage.goto(`chrome-extension://${extensionId}/src/popup/popup.html`);
 
