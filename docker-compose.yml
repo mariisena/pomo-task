@@ -1,0 +1,13 @@
+services:
+  e2e:
+    build: .
+    image: bootcamp/pomo-task-e2e:latest
+    environment:
+      - CI=true
+      - NODE_ENV=test
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    working_dir: /app
+    command: npm run test:e2e
+    shm_size: 2gb  # Evita falhas do Chromium por falta de shared memory

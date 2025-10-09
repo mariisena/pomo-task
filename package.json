@@ -1,0 +1,19 @@
+{
+  "name": "pomo-task",
+  "version": "1.0.0",
+  "description": "Extensão Chrome - Pomodoro com lista de tarefas",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-extension.mjs",
+    "test:e2e": "playwright test --reporter=list,html",
+    "test": "npm run build && npm run test:e2e",
+    "ci": "npm ci && npm run test"
+  },
+  "keywords": ["pomodoro", "chrome-extension", "tasks"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.46.0",
+    "archiver": "^7.0.0"
+  }
+}

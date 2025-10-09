@@ -64,3 +64,9 @@ build/
 CLAUDE.md
 TODO.md
 NOTES.md
+
+# Playwright
+playwright-report/
+test-results/
+playwright/.cache/
+.tmp-profile/
