@@ -20,12 +20,14 @@ test.beforeAll(async () => {
 
   // Lança o Chromium com a extensão carregada
   context = await chromium.launchPersistentContext(tmpDir, {
-    headless: process.env.CI === 'true', // Headless no CI/Docker, headed localmente
+    headless: false, // Service workers de extensões não funcionam em headless
     args: [
       `--disable-extensions-except=${distPath}`,
       `--load-extension=${distPath}`,
       '--no-sandbox',
       '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage', // Evita problemas de memória compartilhada no CI
+      '--disable-gpu', // GPU não necessária para testes
     ],
   });
 
