@@ -56,11 +56,9 @@ test.beforeAll(async () => {
 
   // Se ainda não tiver o ID, abre uma página para forçar o carregamento
   if (!extensionId) {
-    const pages = context.pages();
-    if (pages.length > 0) {
-      await pages[0].goto('about:blank');
-    }
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const page = await context.newPage();
+    await page.goto('about:blank');
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     const serviceWorkers = context.serviceWorkers();
     if (serviceWorkers.length > 0) {
@@ -70,7 +68,15 @@ test.beforeAll(async () => {
         extensionId = match[1];
       }
     }
+
+    await page.close();
   }
+
+  if (!extensionId) {
+    throw new Error('Não foi possível obter o ID da extensão. Service workers disponíveis: ' + context.serviceWorkers().length);
+  }
+
+  console.log('Extension ID capturado:', extensionId);
 });
 
 test.afterAll(async () => {
