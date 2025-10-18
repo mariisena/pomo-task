@@ -60,7 +60,6 @@ build/
 *.backup
 
 # Rascunhos e arquivos temporários do projeto
-CLAUDE.md
 TODO.md
 NOTES.md
 

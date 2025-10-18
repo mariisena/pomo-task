@@ -16,7 +16,6 @@ O PomoTask é uma extensão para Google Chrome (Manifest V3) que combina a técn
 - ✅ **Lista de tarefas** com CRUD completo e persistência local
 - 🔔 **Notificações** de início e fim de ciclos
 - 🔊 **Alertas sonoros** opcionais
-- 📊 **Histórico de ciclos** concluídos
 - 🎨 **Interface moderna** e responsiva
 - 🌐 **Navegação entre views** (principal e configurações)
 - ✋ **Modal de confirmação** para ações críticas
