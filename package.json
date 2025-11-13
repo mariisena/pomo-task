@@ -19,6 +19,7 @@
     "test:api": "cd apps/api && npm test --if-present",
     "test:web": "cd apps/web && npm test --if-present",
     "test:e2e": "playwright test",
+    "test:e2e:with-api": "node scripts/test-with-api.js",
     "test": "npm run test:api && npm run test:web && npm run test:e2e",
     "ci": "npm run build && npm run test",
     "install:all": "npm ci && cd apps/api && npm ci && cd ../web && npm ci && cd ../.."

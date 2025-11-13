@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/pomo-task/dev-sw.js?dev-sw', { scope: '/pomo-task/', type: 'classic' })
