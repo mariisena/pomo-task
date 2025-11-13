@@ -68,3 +68,13 @@ playwright-report/
 test-results/
 playwright/.cache/
 .tmp-profile/
+
+# PWA específico
+apps/web/dist/
+apps/web/.vite/
+
+# Lighthouse
+.lighthouseci/
+
+# PIDs de processos em background
+*.pid
