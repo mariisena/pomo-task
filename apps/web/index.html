@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PomoTask - Pomodoro Timer com gerenciador de tarefas integrado">
+  <meta name="theme-color" content="#ec0089">
+  <title>PomoTask - Pomodoro & Tasks</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32.png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/src/styles/main.css">
+  <link rel="stylesheet" href="/src/styles/timer.css">
+  <link rel="stylesheet" href="/src/styles/tasks.css">
+  <link rel="stylesheet" href="/src/styles/settings.css">
+  <link rel="stylesheet" href="/src/styles/responsive.css">
+
+  <!-- Google Fonts (opcional) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="logo-container">
+        <img src="/icons/icon-48.png" alt="PomoTask" class="logo">
+        <h1 class="app-title">PomoTask</h1>
+      </div>
+      <nav class="header-nav">
+        <button type="button" id="settings-btn" class="icon-btn" data-target="settings" aria-label="Configurações">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m8.66-15.66l-4.24 4.24m-4.24 4.24l-4.24 4.24M23 12h-6m-6 0H1m20.66 8.66l-4.24-4.24m-4.24-4.24l-4.24-4.24"></path>
+          </svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-container">
+    <!-- Main View -->
+    <section class="view active" id="main-view">
+      <!-- Timer Section -->
+      <section class="timer-section" aria-labelledby="timer-heading">
+        <h2 id="timer-heading" class="sr-only">Timer Pomodoro</h2>
+        <div class="timer-card">
+          <div id="mode-display" class="mode-display" aria-live="polite">Focus</div>
+          <div id="timer-display" class="timer-display" aria-live="polite" aria-label="Tempo restante">25:00</div>
+          <div id="round-display" class="round-display" aria-live="polite">Round: 1 / 4</div>
+
+          <div class="timer-controls" role="group" aria-label="Controles do timer">
+            <button id="start-btn" class="btn btn-primary" aria-label="Iniciar timer">
+              INICIAR
+            </button>
+            <button id="pause-btn" class="btn btn-secondary" aria-label="Pausar timer">
+              PAUSAR
+            </button>
+            <button id="reset-btn" class="btn btn-danger" aria-label="Resetar timer">
+              RESETAR
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <hr class="divider">
+
+      <!-- Tasks Section -->
+      <section class="tasks-section" aria-labelledby="tasks-heading">
+        <div class="tasks-header">
+          <h2 id="tasks-heading" class="tasks-title">Tarefas</h2>
+          <button type="button" id="task-menu-btn" class="menu-btn" aria-expanded="false" aria-haspopup="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="5" r="1"></circle>
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="12" cy="19" r="1"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <div id="task-menu" class="dropdown-menu">
+          <button id="clear-completed-btn" class="menu-item">Limpar tarefas concluídas</button>
+          <hr class="menu-divider">
+          <button id="clear-all-btn" class="menu-item">Limpar todas as tarefas</button>
+          <hr class="menu-divider">
+          <button id="sync-tasks-btn" class="menu-item">Sincronizar com servidor</button>
+        </div>
+
+        <ul id="tasks-list" class="tasks-list">
+          <li class="empty-message">Nenhuma tarefa.</li>
+        </ul>
+
+        <form id="add-task-form" class="add-task-form">
+          <input type="text" id="task-input" class="task-input" placeholder="Adicionar tarefa" maxlength="100" aria-label="Nova tarefa">
+          <button type="submit" id="add-btn" class="add-task-btn" aria-label="Adicionar tarefa">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+        </form>
+      </section>
+
+      <!-- Modal de Confirmação -->
+      <div id="confirmation-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-content">
+          <h2 id="modal-title" class="modal-title">Confirmar Ação</h2>
+          <p id="modal-text" class="modal-text">Você tem certeza?</p>
+          <div class="modal-buttons">
+            <button id="modal-confirm-btn" class="btn btn-primary">Confirmar</button>
+            <button id="modal-cancel-btn" class="btn btn-secondary">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings View -->
+    <section id="settings-view" class="view">
+      <header class="settings-header">
+        <h2 class="settings-main-title">CONFIGURAÇÕES</h2>
+        <button type="button" id="back-to-main" class="back-btn" data-target="main" aria-label="Voltar para tela principal">
+          ← Voltar
+        </button>
+      </header>
+
+      <hr class="divider">
+
+      <div class="settings-container" aria-labelledby="timer-config-heading">
+        <h3 id="timer-config-heading" class="settings-subtitle">Configurar Timer</h3>
+
+        <div class="settings-inputs">
+          <div class="input-group">
+            <label for="focus-duration" class="input-label">Focus</label>
+            <div class="range-container">
+              <input type="range" id="focus-duration" class="range-input" min="5" max="90" value="25" step="5">
+              <span id="focus-value" class="input-value">25 min</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="short-break-duration" class="input-label">Pausa Curta</label>
+            <div class="range-container">
+              <input type="range" id="short-break-duration" class="range-input" min="1" max="30" value="5" step="1">
+              <span id="short-break-value" class="input-value">5 min</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="long-break-duration" class="input-label">Pausa Longa</label>
+            <div class="range-container">
+              <input type="range" id="long-break-duration" class="range-input" min="5" max="90" value="15" step="5">
+              <span id="long-break-value" class="input-value">15 min</span>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label for="rounds" class="input-label">Rodadas</label>
+            <div class="range-container">
+              <input type="range" id="rounds" class="range-input" min="1" max="10" value="4" step="1">
+              <span id="rounds-value" class="input-value">4</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="toggle-container">
+        <h3 class="toggle-header">Configurações adicionais</h3>
+        <div class="toggle-row">
+          <label for="sound-alert-toggle" class="toggle-label">Alerta Sonoro</label>
+          <button id="sound-alert-toggle" class="toggle-switch" role="switch" aria-checked="false">
+            <span class="toggle-slider"></span>
+          </button>
+        </div>
+
+        <div class="toggle-row">
+          <label for="auto-check-toggle" class="toggle-label">Verificar tarefas automaticamente</label>
+          <button id="auto-check-toggle" class="toggle-switch" role="switch" aria-checked="false">
+            <span class="toggle-slider"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-actions">
+        <button id="confirm-settings-btn" class="btn btn-primary">
+          CONFIRMAR
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <p class="footer-text">
+        <span class="footer-icon">🍅</span>
+        <span>PomoTask PWA v1.0</span>
+      </p>
+      <div id="sync-status" class="sync-status">
+        <span class="status-dot offline"></span>
+        <span class="status-text">Offline</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>

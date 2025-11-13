@@ -1,0 +1,23 @@
+{
+  "name": "pomo-task-pwa",
+  "version": "1.0.0",
+  "description": "PomoTask - Progressive Web App com Pomodoro e Tarefas",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": ["pomodoro", "pwa", "tasks", "productivity"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "vite": "^5.0.0",
+    "vite-plugin-pwa": "^0.17.0",
+    "vitest": "^1.0.0",
+    "workbox-window": "^7.0.0"
+  }
+}
