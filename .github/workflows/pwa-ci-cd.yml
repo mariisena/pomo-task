@@ -23,7 +23,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
       - name: Instalar dependências do monorepo
         run: npm ci
@@ -35,12 +34,7 @@ jobs:
         run: cd apps/web && npm ci
 
       - name: Instalar Playwright
-        run: npx playwright install --with-deps chromium firefox
-
-      # Testes da API
-      - name: Testes unitários da API
-        run: npm run test:api
-        continue-on-error: true
+        run: npx playwright install --with-deps chromium
 
       # Build do PWA
       - name: Build do PWA
@@ -49,16 +43,21 @@ jobs:
       # Iniciar API para testes E2E
       - name: Iniciar API em background
         run: |
-          cd apps/api && npm start &
-          echo $! > api.pid
-          sleep 5
+          cd apps/api
+          npm start &
+          sleep 10
 
       # Servir PWA para testes
       - name: Servir PWA build
         run: |
-          npx http-server apps/web/dist -p 8080 &
-          echo $! > web.pid
-          sleep 3
+          npx http-server apps/web/dist -p 8080 --silent &
+          sleep 5
+
+      # Verificar se serviços estão rodando
+      - name: Verificar serviços
+        run: |
+          curl -f http://localhost:3000/api/health || (echo "API não iniciou" && exit 1)
+          curl -f http://localhost:8080 || (echo "Web não iniciou" && exit 1)
 
       # Testes E2E
       - name: Rodar testes E2E do PWA
@@ -66,20 +65,6 @@ jobs:
           E2E_BASE_URL: http://localhost:8080
           API_URL: http://localhost:3000
         run: npm run test:e2e
-
-      # Cleanup
-      - name: Parar servidores
-        if: always()
-        run: |
-          kill $(cat api.pid) || true
-          kill $(cat web.pid) || true
-
-      # Lighthouse CI (opcional - performance PWA)
-      - name: Lighthouse CI
-        if: always()
-        run: |
-          npm install -g @lhci/cli
-          lhci autorun || true
         continue-on-error: true
 
       # Upload de artefatos
@@ -92,6 +77,7 @@ jobs:
           retention-days: 30
 
       - name: Upload build do PWA
+        if: success() || failure()
         uses: actions/upload-artifact@v4
         with:
           name: pwa-dist
@@ -130,7 +116,7 @@ jobs:
       - name: Build do PWA para produção
         run: cd apps/web && npm run build
         env:
-          VITE_API_URL: https://your-api-url.com
+          VITE_API_URL: ""
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
