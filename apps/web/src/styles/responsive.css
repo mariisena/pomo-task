@@ -1,0 +1,118 @@
+/**
+ * responsive.css - Estilos responsivos do PomoTask PWA
+ */
+
+/* Mobile First - Base styles para mobile já estão nos arquivos principais */
+
+/* Tablets (768px+) */
+@media (min-width: 768px) {
+    .main-container {
+        padding: 2rem;
+    }
+
+    .timer-card {
+        padding: 2.5rem;
+    }
+
+    .timer-display {
+        font-size: 5rem;
+    }
+
+    .modal-content {
+        max-width: 480px;
+    }
+}
+
+/* Desktop (1024px+) */
+@media (min-width: 1024px) {
+    .main-container {
+        padding: 3rem 2rem;
+    }
+
+    .timer-card {
+        padding: 3rem;
+    }
+
+    .timer-display {
+        font-size: 6rem;
+    }
+
+    .tasks-list {
+        max-height: 500px;
+    }
+}
+
+/* Large Desktop (1440px+) */
+@media (min-width: 1440px) {
+    .main-container {
+        max-width: 1000px;
+    }
+}
+
+/* Print styles */
+@media print {
+    .app-header,
+    .app-footer,
+    .timer-controls,
+    .add-task-form,
+    .task-actions,
+    .menu-btn {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        color: black;
+    }
+
+    .timer-card,
+    .task-item {
+        border: 1px solid #000;
+        background: white;
+        color: black;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode (já é o padrão, mas podemos preparar para futuro light mode) */
+@media (prefers-color-scheme: light) {
+    /* Futura implementação de light mode */
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    :root {
+        --border-color: #ffffff;
+    }
+
+    .btn,
+    .task-item,
+    .timer-card {
+        border-width: 2px;
+    }
+}
+
+/* Landscape mode for mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .timer-display {
+        font-size: 3rem;
+    }
+
+    .timer-card {
+        padding: 1.5rem;
+    }
+
+    .tasks-list {
+        max-height: 200px;
+    }
+}
