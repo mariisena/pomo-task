@@ -1,24 +1,42 @@
 {
-  "name": "pomo-task",
-  "version": "1.0.0",
-  "description": "Extensão Chrome - Pomodoro com lista de tarefas",
+  "name": "pomo-task-monorepo",
+  "version": "2.0.0",
+  "description": "PomoTask - Progressive Web App com Pomodoro e Tarefas (Monorepo)",
   "type": "module",
+  "private": true,
   "scripts": {
-    "build": "node scripts/build-extension.mjs",
-    "test:e2e": "playwright test --reporter=list,html",
-    "test": "npm run build && npm run test:e2e",
-    "ci": "npm ci && npm run test"
+    "dev:api": "cd apps/api && npm run dev",
+    "dev:web": "cd apps/web && npm run dev",
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:web\"",
+    "build:extension": "cd extension && node scripts/build-extension.mjs",
+    "build:api": "cd apps/api && npm ci",
+    "build:web": "cd apps/web && npm ci && npm run build",
+    "build": "npm run build:api && npm run build:web",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "test:api": "cd apps/api && npm test --if-present",
+    "test:web": "cd apps/web && npm test --if-present",
+    "test:e2e": "playwright test",
+    "test": "npm run test:api && npm run test:web && npm run test:e2e",
+    "ci": "npm run build && npm run test",
+    "install:all": "npm ci && cd apps/api && npm ci && cd ../web && npm ci && cd ../.."
   },
   "keywords": [
     "pomodoro",
-    "chrome-extension",
-    "tasks"
+    "pwa",
+    "tasks",
+    "productivity",
+    "docker",
+    "monorepo"
   ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "@playwright/test": "^1.46.0",
     "@types/node": "^24.7.0",
-    "archiver": "^7.0.0"
+    "archiver": "^7.0.0",
+    "concurrently": "^8.2.2"
   }
 }

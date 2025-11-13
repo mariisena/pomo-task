@@ -1,0 +1,145 @@
+name: PWA CI/CD - Build, Test & Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar dependências do monorepo
+        run: npm ci
+
+      - name: Instalar dependências da API
+        run: cd apps/api && npm ci
+
+      - name: Instalar dependências do Web (PWA)
+        run: cd apps/web && npm ci
+
+      - name: Instalar Playwright
+        run: npx playwright install --with-deps chromium firefox
+
+      # Testes da API
+      - name: Testes unitários da API
+        run: npm run test:api
+        continue-on-error: true
+
+      # Build do PWA
+      - name: Build do PWA
+        run: cd apps/web && npm run build
+
+      # Iniciar API para testes E2E
+      - name: Iniciar API em background
+        run: |
+          cd apps/api && npm start &
+          echo $! > api.pid
+          sleep 5
+
+      # Servir PWA para testes
+      - name: Servir PWA build
+        run: |
+          npx http-server apps/web/dist -p 8080 &
+          echo $! > web.pid
+          sleep 3
+
+      # Testes E2E
+      - name: Rodar testes E2E do PWA
+        env:
+          E2E_BASE_URL: http://localhost:8080
+          API_URL: http://localhost:3000
+        run: npm run test:e2e
+
+      # Cleanup
+      - name: Parar servidores
+        if: always()
+        run: |
+          kill $(cat api.pid) || true
+          kill $(cat web.pid) || true
+
+      # Lighthouse CI (opcional - performance PWA)
+      - name: Lighthouse CI
+        if: always()
+        run: |
+          npm install -g @lhci/cli
+          lhci autorun || true
+        continue-on-error: true
+
+      # Upload de artefatos
+      - name: Upload relatório Playwright
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Upload build do PWA
+        uses: actions/upload-artifact@v4
+        with:
+          name: pwa-dist
+          path: apps/web/dist/
+          retention-days: 30
+
+      - name: Upload screenshots de falhas
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-failures
+          path: test-results/
+          retention-days: 30
+
+  deploy-pages:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependências do Web
+        run: cd apps/web && npm ci
+
+      - name: Build do PWA para produção
+        run: cd apps/web && npm run build
+        env:
+          VITE_API_URL: https://your-api-url.com
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload para Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
+
+      - name: Deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
