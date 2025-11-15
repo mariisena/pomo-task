@@ -25,7 +25,7 @@ jobs:
           node-version: '20'
 
       - name: Instalar dependências do monorepo
-        run: npm ci
+        run: npm install
 
       - name: Instalar dependências da API
         run: cd apps/api && npm ci
