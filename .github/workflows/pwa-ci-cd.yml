@@ -43,22 +43,42 @@ jobs:
       # Iniciar API para testes E2E
       - name: Iniciar API em background
         run: |
+          echo "🚀 Iniciando API..."
           cd apps/api
-          npm start &
-          echo $! > $GITHUB_WORKSPACE/api-server.pid
+          nohup npm start > $GITHUB_WORKSPACE/api.log 2>&1 &
+          API_PID=$!
+          echo $API_PID > $GITHUB_WORKSPACE/api-server.pid
+          echo "API iniciada com PID: $API_PID"
           cd $GITHUB_WORKSPACE
 
       # Servir PWA para testes
       - name: Servir PWA build
         run: |
-          npx http-server apps/web/dist -p 8080 &
-          echo $! > $GITHUB_WORKSPACE/web-server.pid
+          echo "🌐 Iniciando servidor web..."
+          nohup npx http-server apps/web/dist -p 8080 > $GITHUB_WORKSPACE/web.log 2>&1 &
+          WEB_PID=$!
+          echo $WEB_PID > $GITHUB_WORKSPACE/web-server.pid
+          echo "Servidor web iniciado com PID: $WEB_PID"
 
       # Aguardar servidores ficarem disponíveis com wait-on
       - name: Aguardar serviços iniciarem
         run: |
           echo "⏳ Aguardando API e Web ficarem disponíveis..."
-          npx wait-on http://localhost:3000/api/health http://localhost:8080 --timeout 60000 --interval 1000 --verbose
+          echo "Processos em execução:"
+          ps aux | grep -E "node|http-server" | grep -v grep || echo "Nenhum processo encontrado"
+
+          npx wait-on http://localhost:3000/api/health http://localhost:8080 --timeout 60000 --interval 1000 --verbose || {
+            echo "❌ Timeout ao aguardar serviços!"
+            echo "=== Log da API ==="
+            cat $GITHUB_WORKSPACE/api.log || echo "Log da API não encontrado"
+            echo "=== Log do Web ==="
+            cat $GITHUB_WORKSPACE/web.log || echo "Log do Web não encontrado"
+            echo "=== Processos ==="
+            ps aux | grep -E "node|http-server" | grep -v grep || echo "Nenhum processo encontrado"
+            echo "=== Portas em uso ==="
+            netstat -tulpn 2>/dev/null | grep -E "3000|8080" || echo "Nenhuma porta encontrada"
+            exit 1
+          }
           echo "✅ Todos os serviços estão rodando!"
 
       # Testes E2E
@@ -68,6 +88,16 @@ jobs:
           API_URL: http://localhost:3000
         run: npm run test:e2e
         continue-on-error: true
+
+      # Mostrar logs se testes falharem
+      - name: Mostrar logs dos servidores
+        if: failure()
+        run: |
+          echo "=== Log da API ==="
+          cat $GITHUB_WORKSPACE/api.log || echo "Log da API não disponível"
+          echo ""
+          echo "=== Log do Web ==="
+          cat $GITHUB_WORKSPACE/web.log || echo "Log do Web não disponível"
 
       # Cleanup de processos
       - name: Parar servidores
@@ -94,6 +124,16 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
+          retention-days: 30
+
+      - name: Upload logs dos servidores
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-logs
+          path: |
+            api.log
+            web.log
           retention-days: 30
 
       - name: Upload build do PWA
