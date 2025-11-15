@@ -45,19 +45,45 @@ jobs:
         run: |
           cd apps/api
           npm start &
-          sleep 10
+          echo $! > api-server.pid
+          sleep 5
 
       # Servir PWA para testes
       - name: Servir PWA build
         run: |
           npx http-server apps/web/dist -p 8080 --silent &
-          sleep 5
+          echo $! > web-server.pid
+          sleep 3
+
+      # Aguardar servidores ficarem disponíveis
+      - name: Aguardar serviços iniciarem
+        run: |
+          echo "Aguardando API..."
+          for i in {1..30}; do
+            if curl -f http://localhost:3000/api/health 2>/dev/null; then
+              echo "✅ API disponível!"
+              break
+            fi
+            echo "Tentativa $i/30..."
+            sleep 2
+          done
+
+          echo "Aguardando Web..."
+          for i in {1..30}; do
+            if curl -f http://localhost:8080 2>/dev/null; then
+              echo "✅ Web disponível!"
+              break
+            fi
+            echo "Tentativa $i/30..."
+            sleep 2
+          done
 
       # Verificar se serviços estão rodando
       - name: Verificar serviços
         run: |
-          curl -f http://localhost:3000/api/health || (echo "API não iniciou" && exit 1)
-          curl -f http://localhost:8080 || (echo "Web não iniciou" && exit 1)
+          curl -f http://localhost:3000/api/health || (echo "❌ API não iniciou" && exit 1)
+          curl -f http://localhost:8080 || (echo "❌ Web não iniciou" && exit 1)
+          echo "✅ Todos os serviços estão rodando!"
 
       # Testes E2E
       - name: Rodar testes E2E do PWA
@@ -66,6 +92,20 @@ jobs:
           API_URL: http://localhost:3000
         run: npm run test:e2e
         continue-on-error: true
+
+      # Cleanup de processos
+      - name: Parar servidores
+        if: always()
+        run: |
+          if [ -f api-server.pid ]; then
+            kill $(cat api-server.pid) 2>/dev/null || true
+          fi
+          if [ -f web-server.pid ]; then
+            kill $(cat web-server.pid) 2>/dev/null || true
+          fi
+          # Fallback: matar por porta
+          lsof -ti:3000 | xargs kill -9 2>/dev/null || true
+          lsof -ti:8080 | xargs kill -9 2>/dev/null || true
 
       # Upload de artefatos
       - name: Upload relatório Playwright
