@@ -45,44 +45,20 @@ jobs:
         run: |
           cd apps/api
           npm start &
-          echo $! > api-server.pid
-          sleep 5
+          echo $! > $GITHUB_WORKSPACE/api-server.pid
+          cd $GITHUB_WORKSPACE
 
       # Servir PWA para testes
       - name: Servir PWA build
         run: |
-          npx http-server apps/web/dist -p 8080 --silent &
-          echo $! > web-server.pid
-          sleep 3
+          npx http-server apps/web/dist -p 8080 &
+          echo $! > $GITHUB_WORKSPACE/web-server.pid
 
-      # Aguardar servidores ficarem disponíveis
+      # Aguardar servidores ficarem disponíveis com wait-on
       - name: Aguardar serviços iniciarem
         run: |
-          echo "Aguardando API..."
-          for i in {1..30}; do
-            if curl -f http://localhost:3000/api/health 2>/dev/null; then
-              echo "✅ API disponível!"
-              break
-            fi
-            echo "Tentativa $i/30..."
-            sleep 2
-          done
-
-          echo "Aguardando Web..."
-          for i in {1..30}; do
-            if curl -f http://localhost:8080 2>/dev/null; then
-              echo "✅ Web disponível!"
-              break
-            fi
-            echo "Tentativa $i/30..."
-            sleep 2
-          done
-
-      # Verificar se serviços estão rodando
-      - name: Verificar serviços
-        run: |
-          curl -f http://localhost:3000/api/health || (echo "❌ API não iniciou" && exit 1)
-          curl -f http://localhost:8080 || (echo "❌ Web não iniciou" && exit 1)
+          echo "⏳ Aguardando API e Web ficarem disponíveis..."
+          npx wait-on http://localhost:3000/api/health http://localhost:8080 --timeout 60000 --interval 1000 --verbose
           echo "✅ Todos os serviços estão rodando!"
 
       # Testes E2E
@@ -97,15 +73,19 @@ jobs:
       - name: Parar servidores
         if: always()
         run: |
-          if [ -f api-server.pid ]; then
-            kill $(cat api-server.pid) 2>/dev/null || true
+          echo "🛑 Parando servidores..."
+          if [ -f $GITHUB_WORKSPACE/api-server.pid ]; then
+            kill $(cat $GITHUB_WORKSPACE/api-server.pid) 2>/dev/null || true
+            rm $GITHUB_WORKSPACE/api-server.pid
           fi
-          if [ -f web-server.pid ]; then
-            kill $(cat web-server.pid) 2>/dev/null || true
+          if [ -f $GITHUB_WORKSPACE/web-server.pid ]; then
+            kill $(cat $GITHUB_WORKSPACE/web-server.pid) 2>/dev/null || true
+            rm $GITHUB_WORKSPACE/web-server.pid
           fi
           # Fallback: matar por porta
           lsof -ti:3000 | xargs kill -9 2>/dev/null || true
           lsof -ti:8080 | xargs kill -9 2>/dev/null || true
+          echo "✅ Cleanup concluído"
 
       # Upload de artefatos
       - name: Upload relatório Playwright
