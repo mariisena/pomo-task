@@ -45,20 +45,21 @@ jobs:
         run: |
           echo "🚀 Iniciando API..."
           cd apps/api
-          nohup npm start > $GITHUB_WORKSPACE/api.log 2>&1 &
+          npm start > ../../api.log 2>&1 &
           API_PID=$!
-          echo $API_PID > $GITHUB_WORKSPACE/api-server.pid
+          echo $API_PID > ../../api-server.pid
           echo "API iniciada com PID: $API_PID"
-          cd $GITHUB_WORKSPACE
+          sleep 2
 
       # Servir PWA para testes
       - name: Servir PWA build
         run: |
           echo "🌐 Iniciando servidor web..."
-          nohup npx http-server apps/web/dist -p 8080 > $GITHUB_WORKSPACE/web.log 2>&1 &
+          npx http-server apps/web/dist -p 8080 > web.log 2>&1 &
           WEB_PID=$!
-          echo $WEB_PID > $GITHUB_WORKSPACE/web-server.pid
+          echo $WEB_PID > web-server.pid
           echo "Servidor web iniciado com PID: $WEB_PID"
+          sleep 2
 
       # Aguardar servidores ficarem disponíveis com wait-on
       - name: Aguardar serviços iniciarem
@@ -70,9 +71,9 @@ jobs:
           npx wait-on http://localhost:3000/api/health http://localhost:8080 --timeout 60000 --interval 1000 --verbose || {
             echo "❌ Timeout ao aguardar serviços!"
             echo "=== Log da API ==="
-            cat $GITHUB_WORKSPACE/api.log || echo "Log da API não encontrado"
+            cat api.log || echo "Log da API não encontrado"
             echo "=== Log do Web ==="
-            cat $GITHUB_WORKSPACE/web.log || echo "Log do Web não encontrado"
+            cat web.log || echo "Log do Web não encontrado"
             echo "=== Processos ==="
             ps aux | grep -E "node|http-server" | grep -v grep || echo "Nenhum processo encontrado"
             echo "=== Portas em uso ==="
@@ -94,23 +95,23 @@ jobs:
         if: failure()
         run: |
           echo "=== Log da API ==="
-          cat $GITHUB_WORKSPACE/api.log || echo "Log da API não disponível"
+          cat api.log || echo "Log da API não disponível"
           echo ""
           echo "=== Log do Web ==="
-          cat $GITHUB_WORKSPACE/web.log || echo "Log do Web não disponível"
+          cat web.log || echo "Log do Web não disponível"
 
       # Cleanup de processos
       - name: Parar servidores
         if: always()
         run: |
           echo "🛑 Parando servidores..."
-          if [ -f $GITHUB_WORKSPACE/api-server.pid ]; then
-            kill $(cat $GITHUB_WORKSPACE/api-server.pid) 2>/dev/null || true
-            rm $GITHUB_WORKSPACE/api-server.pid
+          if [ -f api-server.pid ]; then
+            kill $(cat api-server.pid) 2>/dev/null || true
+            rm api-server.pid
           fi
-          if [ -f $GITHUB_WORKSPACE/web-server.pid ]; then
-            kill $(cat $GITHUB_WORKSPACE/web-server.pid) 2>/dev/null || true
-            rm $GITHUB_WORKSPACE/web-server.pid
+          if [ -f web-server.pid ]; then
+            kill $(cat web-server.pid) 2>/dev/null || true
+            rm web-server.pid
           fi
           # Fallback: matar por porta
           lsof -ti:3000 | xargs kill -9 2>/dev/null || true
