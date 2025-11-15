@@ -1,158 +1,335 @@
 # 🍅 PomoTask
 
-[![CI - Build & E2E Tests](https://github.com/mariisena/pomo-task/actions/workflows/ci.yml/badge.svg)](https://github.com/mariisena/pomo-task/actions/workflows/ci.yml)
+[![PWA CI/CD](https://github.com/mariisena/pomo-task/actions/workflows/pwa-ci-cd.yml/badge.svg)](https://github.com/mariisena/pomo-task/actions/workflows/pwa-ci-cd.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Extensão Pomodoro com lista de tarefas integrada para Google Chrome.
-Foque, organize e conclua suas metas de forma prática!
+**Progressive Web App** com técnica Pomodoro e gerenciador de tarefas integrado. Foque, organize e conquiste suas metas com sincronização em nuvem!
 
-## 📌 Descrição
+🌐 **[Demo ao vivo](https://mariisena.github.io/pomo-task/)** | 📱 **Instalável** | 🔄 **Funciona Offline**
 
-O PomoTask é uma extensão para Google Chrome (Manifest V3) que combina a técnica Pomodoro com um gerenciador de tarefas minimalista. A proposta é ajudar estudantes e profissionais a manterem o foco, equilibrando tempo de estudo/trabalho com pausas estratégicas.
+---
+
+## 📱 O que é este Projeto?
+
+PomoTask é um **PWA (Progressive Web App)** completo que combina:
+- ⏱️ **Timer Pomodoro** personalizável
+- ✅ **Gerenciador de Tarefas** com CRUD completo
+- 🔄 **Sincronização** online/offline
+- 🔔 **Notificações** web
+- 📱 **Instalável** como app nativo
+
+---
 
 ## ✨ Funcionalidades
 
-- ⏱️ **Timer Pomodoro personalizável** (foco, pausa curta e pausa longa)
-- ✅ **Lista de tarefas** com CRUD completo e persistência local
-- 🔔 **Notificações** de início e fim de ciclos
-- 🔊 **Alertas sonoros** opcionais
-- 🎨 **Interface moderna** e responsiva
-- 🌐 **Navegação entre views** (principal e configurações)
-- ✋ **Modal de confirmação** para ações críticas
+### Timer Pomodoro
+- ⏱️ Contador regressivo personalizável (5-90 min)
+- 🔄 Ciclos automáticos (Foco → Pausa Curta → Foco → Pausa Longa)
+- 🔔 Notificações web ao completar sessões
+- 🔊 Alertas sonoros opcionais
+- 💾 Persistência de estado (retoma de onde parou)
 
-## 🛠️ Tecnologias
+### Gerenciador de Tarefas
+- ✅ CRUD completo (criar, editar, marcar, deletar)
+- 🔄 Sincronização com servidor (online/offline)
+- 💾 Persistência local (localStorage)
+- 📊 Indicador de status de conexão
+- 🎯 Edição rápida com duplo clique
 
-- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
-- **Chrome APIs:** Storage, Notifications, Alarms, Offscreen Documents
-- **Manifest:** V3 (última versão do Chrome Extensions)
-- **Testes:** Playwright (E2E)
-- **CI/CD:** GitHub Actions
-- **Containerização:** Docker (para testes)
+### Configurações
+- ⚙️ Ajuste tempos de foco e pausas
+- 🔢 Configure número de rodadas (1-10)
+- 🔊 Ative/desative sons
+- 💾 Salvamento automático
 
-## 📦 Instalação
+---
 
-### Modo Desenvolvedor
+## 🚀 Acesso Rápido
 
-1. Clone o repositório:
-```bash
-git clone https://github.com/mariisena/pomo-task.git
-cd pomo-task
-```
+### 🌐 Usar Online (Recomendado)
 
-2. Instale as dependências (para desenvolvimento/testes):
-```bash
-npm install
-```
+Acesse diretamente: **https://mariisena.github.io/pomo-task/**
 
-3. Carregue a extensão no Chrome:
-   - Abra `chrome://extensions/`
-   - Ative o **Modo do desenvolvedor** (canto superior direito)
-   - Clique em **Carregar sem compactação**
-   - Selecione a pasta do projeto
-   - O ícone 🍅 aparecerá na barra de extensões!
+### 📥 Instalar como App
 
-### Build de Produção
+**Desktop (Chrome/Edge):**
+1. Acesse o link acima
+2. Clique no ícone ➕ na barra de endereço
+3. "Instalar PomoTask"
 
-```bash
-npm run build
-```
+**Mobile (Android):**
+1. Abra no Chrome
+2. Menu ⋮ → "Adicionar à tela inicial"
 
-Gera a pasta `dist/` e o arquivo `extension.zip` prontos para distribuição.
+**Mobile (iOS):**
+1. Abra no Safari
+2. Compartilhar 📤 → "Adicionar à Tela de Início"
 
-## 🚀 Como Usar
+### 📦 Extensão Chrome (Legacy)
 
-1. Clique no ícone do PomoTask no navegador
-2. Adicione suas tarefas na lista
-3. Configure os tempos em ⚙️ Configurações (opcional)
-4. Inicie o timer Pomodoro e mantenha o foco
-5. Marque as tarefas concluídas conforme avança
+Baixe a extensão: [Releases](https://github.com/mariisena/pomo-task/releases)
 
-## 🧪 Testes
-
-```bash
-npm test            # Build + testes E2E
-npm run test:e2e    # Apenas testes E2E
-npm run ci          # Simula ambiente CI
-```
-
-### Docker
-
-```bash
-docker-compose up       # Rodar testes em container
-docker-compose build    # Rebuild após mudanças
-```
+---
 
 ## 🏗️ Arquitetura
 
+Este projeto utiliza uma **arquitetura monorepo** com backend e frontend separados:
+
 ```
-src/
-├── background/
-│   └── service-worker.js      # Notificações e áudio em background
-├── js/
-│   ├── pomodoro-timer.js      # Lógica do timer
-│   ├── tasks.js               # Gerenciamento de tarefas
-│   ├── settings.js            # Configurações
-│   ├── navigation.js          # Navegação entre views
-│   └── header.js              # Lógica do header
-├── popup/
-│   ├── popup.html             # Interface principal
-│   ├── popup.js               # Inicialização
-│   ├── popup.css              # Estilos principais
-│   └── html/                  # Componentes modulares (iframes)
-└── icons/                     # Ícones da extensão
+pomo-task/
+├── apps/
+│   ├── web/              # PWA (Frontend)
+│   │   ├── src/
+│   │   │   ├── js/       # Lógica da aplicação
+│   │   │   ├── styles/   # CSS modular
+│   │   │   └── main.js   # Entry point
+│   │   └── vite.config.js
+│   │
+│   └── api/              # Backend (Node/Express)
+│       └── src/
+│           └── index.js  # API REST
+│
+├── extension/            # Extensão Chrome (legacy)
+├── tests/pwa/           # Testes E2E (Playwright)
+├── docker-compose.yml   # Orquestração
+└── .github/workflows/   # CI/CD
 ```
 
-### Padrões Utilizados
+### Stack Tecnológico
 
-- **Manager Classes:** Cada módulo tem uma classe ES6 que gerencia estado e UI
-- **Chrome Storage API:** Persistência de dados local
-- **Event Delegation:** Navegação eficiente com `data-target`
-- **Offscreen Documents:** Reprodução de áudio (Manifest V3)
-- **Modal Pattern:** Confirmações customizadas substituindo `confirm()`
+**Frontend (PWA)**
+- Vite - Build tool e dev server
+- Vite PWA Plugin - Service Worker e Manifest
+- Vanilla JavaScript (ES6+)
+- CSS3 - Variáveis CSS e responsivo
+- Workbox - Estratégias de cache
 
-## 🤝 Desenvolvimento e Contribuições
+**Backend (API)**
+- Node.js 20
+- Express - Framework web
+- CORS - Cross-origin
 
-### Autoria
+**DevOps**
+- Docker & Docker Compose
+- GitHub Actions (CI/CD)
+- Playwright (E2E tests)
+- Nginx (produção)
 
-- **Desenvolvido por:** [Mariana Sena](https://github.com/mariisena)
-- **Projeto acadêmico:** Bootcamp II - Desenvolvimento de Extensões Chrome
+---
 
-### Ferramentas de IA Utilizadas
+## 💻 Desenvolvimento Local
 
-Este projeto utilizou **Claude Code** (Anthropic) como assistente de desenvolvimento para:
+### Pré-requisitos
 
-- ✅ **Code review** e identificação de bugs
-- ✅ **Refatoração** de código (navegação, modal, service worker)
-- ✅ **Correção de issues** críticos (CSP, duplicação de instâncias, segurança)
-- ✅ **Padronização** de código (aspas, estrutura HTML)
-- ✅ **Testes E2E** e validação de funcionalidades
-- ✅ **Documentação** (CLAUDE.md, README)
+- Node.js 20+
+- npm 9+
+- Docker & Docker Compose (opcional)
 
-**Transparência acadêmica:** O uso de IA foi para assistência técnica, debugging e boas práticas. A arquitetura, lógica de negócio e implementação core foram desenvolvidas manualmente. Todos os commits com auxílio de IA estão marcados com `Co-Authored-By: Claude`.
-
-### Histórico de Commits
+### Quick Start
 
 ```bash
-git log --oneline  # Ver histórico completo
+# 1. Clonar repositório
+git clone https://github.com/mariisena/pomo-task.git
+cd pomo-task
+
+# 2. Instalar dependências
+npm run install:all
+
+# 3. Rodar em desenvolvimento (API + PWA)
+npm run dev
 ```
 
-Commits com IA identificados por:
+Acesse:
+- 🌐 **PWA**: http://localhost:8080
+- 🔌 **API**: http://localhost:3000/api/health
+
+### Comandos Úteis
+
+```bash
+# Desenvolvimento
+npm run dev              # API + PWA em paralelo
+npm run dev:api          # Apenas API
+npm run dev:web          # Apenas PWA
+
+# Build
+npm run build            # Build completo
+npm run build:api        # Build da API
+npm run build:web        # Build do PWA
+
+# Testes
+npm test                 # Todos os testes
+npm run test:e2e         # Testes E2E
+npx playwright test --ui # Playwright UI (interativo)
+
+# Docker
+npm run docker:up        # Iniciar containers
+npm run docker:down      # Parar containers
+npm run docker:logs      # Ver logs
 ```
-Co-Authored-By: Claude <noreply@anthropic.com>
+
+Veja mais comandos em: [QUICK-START.md](QUICK-START.md)
+
+---
+
+## 🐳 Docker
+
+### Rodar com Docker Compose
+
+```bash
+# Build e iniciar
+docker-compose up --build
+
+# Ou em background
+docker-compose up -d
 ```
 
-## 📌 Próximos Passos
+Acesse:
+- 🌐 **PWA**: http://localhost:8080
+- 🔌 **API**: http://localhost:3000
 
-- 🔄 Sincronização com conta Google
-- 🌙 Modo claro/escuro
-- 📊 Dashboard com estatísticas avançadas
-- ⚡ Implementar feature `autoCheck`
-- 🎯 Pomodoros por tarefa (tracking individual)
+### Parar
 
-## 📚 Documentação Técnica
+```bash
+docker-compose down
+```
 
-Veja [CLAUDE.md](CLAUDE.md) para detalhes de arquitetura, padrões de código e guias de desenvolvimento.
+---
 
-## 📄 Licença
+## 🧪 Testes
 
-Este projeto está sob a licença MIT.
+### Testes E2E (Playwright)
+
+```bash
+# Com API rodando
+npm run dev:api  # Terminal 1
+npm run test:e2e # Terminal 2
+
+# Ou automático
+npm run test:e2e:with-api
+
+# UI interativa
+npx playwright test --ui
+```
+
+### Cobertura
+
+- ✅ Timer (start, pause, reset, complete)
+- ✅ Tarefas (CRUD completo)
+- ✅ Navegação entre views
+- ✅ Configurações
+- ✅ Persistência local
+- ✅ API endpoints
+- ✅ Responsividade
+
+**Total:** 25/26 testes passando (96%)
+
+---
+
+## 🚀 Deploy
+
+### GitHub Pages
+
+O PWA é automaticamente deployado via GitHub Actions quando há push na `main`.
+
+**URL:** https://mariisena.github.io/pomo-task/
+
+### CI/CD Pipeline
+
+O workflow `.github/workflows/pwa-ci-cd.yml` executa:
+
+1. ✅ **Build** - Compila API e PWA
+2. 🧪 **Testes** - Roda testes E2E
+3. 📦 **Artefatos** - Upload de reports e builds
+4. 🚀 **Deploy** - Publica no GitHub Pages
+
+**Ver execuções:** [Actions](https://github.com/mariisena/pomo-task/actions)
+
+---
+
+## 🔌 API Endpoints
+
+Base URL: `http://localhost:3000/api`
+
+### Tarefas
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/tasks` | Listar todas |
+| `POST` | `/tasks` | Criar nova |
+| `PUT` | `/tasks/:id` | Atualizar |
+| `DELETE` | `/tasks/:id` | Deletar |
+| `POST` | `/tasks/sync` | Sincronização bulk |
+
+### Ciclos Pomodoro
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/cycles` | Listar ciclos |
+| `POST` | `/cycles` | Registrar ciclo |
+| `GET` | `/stats` | Estatísticas |
+
+### Health Check
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/health` | Status da API |
+
+---
+
+## 📚 Documentação
+
+- [QUICK-START.md](QUICK-START.md) - Comandos rápidos
+- [ENTREGA-PARTE-3.md](ENTREGA-PARTE-3.md) - Guia de entrega
+- [SUMMARY.md](SUMMARY.md) - Resumo e métricas
+- [docs/](docs/) - Documentação adicional
+
+---
+
+## 🤝 Contribuindo
+
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/nova-funcionalidade`)
+3. Commit suas mudanças (`git commit -m 'feat: adicionar nova funcionalidade'`)
+4. Push para a branch (`git push origin feature/nova-funcionalidade`)
+5. Abra um Pull Request
+
+**Convenção de commits:** [Conventional Commits](https://www.conventionalcommits.org/)
+
+---
+
+## 📊 Status do Projeto
+
+- ✅ PWA funcional (instalável, offline)
+- ✅ Backend API REST
+- ✅ Docker + Docker Compose
+- ✅ CI/CD automatizado
+- ✅ Testes E2E (96% passing)
+- ✅ Deploy automático (GitHub Pages)
+- ✅ Documentação completa
+
+---
+
+## 📝 Licença
+
+MIT License - veja [LICENSE](LICENSE) para detalhes.
+
+---
+
+## 👨‍💻 Autora
+
+Desenvolvido para **Bootcamp II - Entrega Final (Parte 3)**
+
+- 🐙 GitHub: [@mariisena](https://github.com/mariisena)
+- 🌐 Demo: [PomoTask PWA](https://mariisena.github.io/pomo-task/)
+
+---
+
+## 🙏 Agradecimentos
+
+- Técnica Pomodoro - Francesco Cirillo
+- Ícones - Inline SVG
+- Fontes - Google Fonts
+
+---
+
+**⭐ Se gostou, deixe uma estrela!**
