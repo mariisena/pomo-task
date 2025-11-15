@@ -40,83 +40,14 @@ jobs:
       - name: Build do PWA
         run: cd apps/web && npm run build
 
-      # Iniciar API para testes E2E
-      - name: Iniciar API em background
-        run: |
-          echo "🚀 Iniciando API..."
-          cd apps/api
-          npm start > ../../api.log 2>&1 &
-          API_PID=$!
-          echo $API_PID > ../../api-server.pid
-          echo "API iniciada com PID: $API_PID"
-          sleep 2
-
-      # Servir PWA para testes
-      - name: Servir PWA build
-        run: |
-          echo "🌐 Iniciando servidor web..."
-          npx http-server apps/web/dist -p 8080 > web.log 2>&1 &
-          WEB_PID=$!
-          echo $WEB_PID > web-server.pid
-          echo "Servidor web iniciado com PID: $WEB_PID"
-          sleep 2
-
-      # Aguardar servidores ficarem disponíveis com wait-on
-      - name: Aguardar serviços iniciarem
-        run: |
-          echo "⏳ Aguardando API e Web ficarem disponíveis..."
-          echo "Processos em execução:"
-          ps aux | grep -E "node|http-server" | grep -v grep || echo "Nenhum processo encontrado"
-
-          npx wait-on http://localhost:3000/api/health http://localhost:8080 --timeout 60000 --interval 1000 --verbose || {
-            echo "❌ Timeout ao aguardar serviços!"
-            echo "=== Log da API ==="
-            cat api.log || echo "Log da API não encontrado"
-            echo "=== Log do Web ==="
-            cat web.log || echo "Log do Web não encontrado"
-            echo "=== Processos ==="
-            ps aux | grep -E "node|http-server" | grep -v grep || echo "Nenhum processo encontrado"
-            echo "=== Portas em uso ==="
-            netstat -tulpn 2>/dev/null | grep -E "3000|8080" || echo "Nenhuma porta encontrada"
-            exit 1
-          }
-          echo "✅ Todos os serviços estão rodando!"
-
-      # Testes E2E
+      # Testes E2E (Playwright gerencia os servidores automaticamente)
       - name: Rodar testes E2E do PWA
         env:
+          CI: true
           E2E_BASE_URL: http://localhost:8080
           API_URL: http://localhost:3000
         run: npm run test:e2e
         continue-on-error: true
-
-      # Mostrar logs se testes falharem
-      - name: Mostrar logs dos servidores
-        if: failure()
-        run: |
-          echo "=== Log da API ==="
-          cat api.log || echo "Log da API não disponível"
-          echo ""
-          echo "=== Log do Web ==="
-          cat web.log || echo "Log do Web não disponível"
-
-      # Cleanup de processos
-      - name: Parar servidores
-        if: always()
-        run: |
-          echo "🛑 Parando servidores..."
-          if [ -f api-server.pid ]; then
-            kill $(cat api-server.pid) 2>/dev/null || true
-            rm api-server.pid
-          fi
-          if [ -f web-server.pid ]; then
-            kill $(cat web-server.pid) 2>/dev/null || true
-            rm web-server.pid
-          fi
-          # Fallback: matar por porta
-          lsof -ti:3000 | xargs kill -9 2>/dev/null || true
-          lsof -ti:8080 | xargs kill -9 2>/dev/null || true
-          echo "✅ Cleanup concluído"
 
       # Upload de artefatos
       - name: Upload relatório Playwright
@@ -125,16 +56,6 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
-          retention-days: 30
-
-      - name: Upload logs dos servidores
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: server-logs
-          path: |
-            api.log
-            web.log
           retention-days: 30
 
       - name: Upload build do PWA

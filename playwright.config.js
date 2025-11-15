@@ -33,10 +33,26 @@ export default defineConfig({
       use: { ...devices['Pixel 5'] },
     },
   ],
-  webServer: process.env.CI ? undefined : {
-    command: 'cd apps/web && npm run dev',
-    url: 'http://localhost:8080',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  webServer: [
+    // API Server
+    {
+      command: 'cd apps/api && npm start',
+      url: 'http://localhost:3000/api/health',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
+      stdout: 'pipe',
+      stderr: 'pipe',
+    },
+    // Web Server (usando build estático em CI, dev em local)
+    {
+      command: process.env.CI
+        ? 'npx http-server apps/web/dist -p 8080'
+        : 'cd apps/web && npm run dev',
+      url: 'http://localhost:8080',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
+      stdout: 'pipe',
+      stderr: 'pipe',
+    },
+  ],
 });
