@@ -83,6 +83,8 @@ class PomodoroTimer {
 
         // Enviar notificação e tocar som
         let message = '';
+        let isEnteringBreak = false; // Flag para saber se estamos entrando em uma pausa
+
         if (this.state.mode === 'focus') {
             if (this.state.currentRound >= this.state.settings.rounds) {
                 message = '🎉 Ciclo completo! Hora do intervalo longo!';
@@ -90,16 +92,25 @@ class PomodoroTimer {
                 this.state.currentRound = 1;
                 this.state.timeLeft = this.state.settings.longBreakDuration * 60;
                 this.incrementCompletedCycles();
+                isEnteringBreak = true;
             } else {
                 message = '✅ Foco concluído! Hora do intervalo curto!';
                 this.state.mode = 'shortBreak';
                 this.state.currentRound++;
                 this.state.timeLeft = this.state.settings.shortBreakDuration * 60;
+                isEnteringBreak = true;
             }
         } else {
             message = '💪 Intervalo terminado! Vamos focar novamente!';
             this.state.mode = 'focus';
             this.state.timeLeft = this.state.settings.focusDuration * 60;
+        }
+
+        // Auto-completar tarefas se configurado e estamos entrando em uma pausa
+        if (this.state.settings.autoCheck && isEnteringBreak) {
+            if (window.taskManager) {
+                window.taskManager.autoCompleteAllIncompleteTasks();
+            }
         }
 
         // Enviar mensagem para service worker

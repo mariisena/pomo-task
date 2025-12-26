@@ -212,6 +212,24 @@ class TaskManager {
         if (result.nextId) this.nextId = result.nextId;
     }
 
+    // Auto-completar todas as tarefas incompletas (usado pela funcionalidade Auto-Check)
+    autoCompleteAllIncompleteTasks() {
+        let hasChanges = false;
+        this.tasks.forEach(task => {
+            if (!task.completed) {
+                task.completed = true;
+                hasChanges = true;
+            }
+        });
+
+        if (hasChanges) {
+            this.saveTasks();
+            this.renderTasks();
+        }
+
+        return hasChanges;
+    }
+
     showConfirmationModal(message, onConfirm) {
         if (!this.elements.modal || !this.elements.modalText || !this.elements.modalConfirmBtn || !this.elements.modalCancelBtn) {
             console.error('Modal elements not found');

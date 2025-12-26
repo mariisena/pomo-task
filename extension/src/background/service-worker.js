@@ -24,14 +24,17 @@ function showNotification(message) {
 
 // Função para tocar som usando a API Offscreen
 async function playSound() {
-  // Verifica se já existe um documento offscreen
-  if (await chrome.offscreen.hasDocument()) {
-    // Se existir, apenas envia uma mensagem para ele tocar o som
-    chrome.runtime.sendMessage({ type: 'playOffscreenSound' });
-    return;
+  // Fecha qualquer documento offscreen existente antes de criar um novo
+  // Isso garante que o som toque toda vez
+  try {
+    if (await chrome.offscreen.hasDocument()) {
+      await chrome.offscreen.closeDocument();
+    }
+  } catch (error) {
+    console.log('Nenhum documento offscreen para fechar:', error);
   }
 
-  // Se não existir, cria o documento offscreen
+  // Cria novo documento offscreen (que automaticamente toca o som ao carregar)
   await chrome.offscreen.createDocument({
     url: 'src/popup/sounds.html',
     reasons: [chrome.offscreen.Reason.AUDIO_PLAYBACK],
