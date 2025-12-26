@@ -88,6 +88,7 @@ class PomodoroTimer {
 
         let message = '';
         let title = 'PomoTask';
+        let isEnteringBreak = false; // Flag para saber se estamos entrando em uma pausa
 
         if (this.state.mode === 'focus') {
             if (this.state.currentRound >= this.state.settings.rounds) {
@@ -97,18 +98,27 @@ class PomodoroTimer {
                 this.state.currentRound = 1;
                 this.state.timeLeft = this.state.settings.longBreakDuration * 60;
                 await this.incrementCompletedCycles();
+                isEnteringBreak = true;
             } else {
                 title = 'Foco Concluído!';
                 message = '✅ Foco concluído! Hora do intervalo curto!';
                 this.state.mode = 'shortBreak';
                 this.state.currentRound++;
                 this.state.timeLeft = this.state.settings.shortBreakDuration * 60;
+                isEnteringBreak = true;
             }
         } else {
             title = 'Intervalo Terminado!';
             message = '💪 Intervalo terminado! Vamos focar novamente!';
             this.state.mode = 'focus';
             this.state.timeLeft = this.state.settings.focusDuration * 60;
+        }
+
+        // Auto-completar tarefas se configurado e estamos entrando em uma pausa
+        if (this.state.settings.autoCheck && isEnteringBreak) {
+            if (window.taskManager) {
+                window.taskManager.autoCompleteAllIncompleteTasks();
+            }
         }
 
         // Enviar notificação
@@ -141,11 +151,22 @@ class PomodoroTimer {
 
     playSound() {
         try {
-            const audio = new Audio('/sounds/notification.mp3');
-            audio.volume = 0.5;
-            audio.play().catch(err => console.log('Erro ao tocar som:', err));
+            // Usa Web Audio API para gerar beep (não precisa de arquivo MP3)
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // Lá 440Hz
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.start();
+            oscillator.stop(audioContext.currentTime + 0.5); // Toca por 0.5 segundos
         } catch (err) {
-            console.log('Erro ao criar áudio:', err);
+            console.log('Erro ao tocar som:', err);
         }
     }
 

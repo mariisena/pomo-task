@@ -258,6 +258,25 @@ class TaskManager {
         }
     }
 
+    // Auto-completar todas as tarefas incompletas (usado pela funcionalidade Auto-Check)
+    autoCompleteAllIncompleteTasks() {
+        let hasChanges = false;
+        this.tasks.forEach(task => {
+            if (!task.completed) {
+                task.completed = true;
+                task.updatedAt = new Date().toISOString();
+                hasChanges = true;
+            }
+        });
+
+        if (hasChanges) {
+            this.saveTasks();
+            this.renderTasks();
+        }
+
+        return hasChanges;
+    }
+
     async syncWithServer(silent = false) {
         try {
             this.updateSyncStatus('syncing');
